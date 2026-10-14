@@ -1,6 +1,6 @@
 <navigation-bar title="自定义题库" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="container">
-  <view class="tip">粘贴格式化文本，或上传 .txt / .md 文件；.kbz 文件直接导入。</view>
+  <view class="tip">粘贴文本，或上传 .txt / .md / .doc / .docx / .kbz 文件。</view>
 
   <view class="field">
     <text class="label">题库名</text>

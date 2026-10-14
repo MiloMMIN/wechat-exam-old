@@ -33,13 +33,19 @@ function cleanStem(s: string): string {
 export function parseText(input: string): ParseResult {
   const warnings: string[] = []
   const questions: Question[] = []
-
-  // 1) 全文行归一化
-  const rawLines = input
-    .split(/\r?\n/)
-    .map(l => l.trim())
-    .filter(Boolean)
-
+  // 1) 全文行归一化：空行过滤 + 把孤立字母行（"A" 后跟内容行）黏回去
+  const raw0 = input.split(/\r?\n/).map(l => l.trim())
+  const rawLines: string[] = []
+  for (let i = 0; i < raw0.length; i++) {
+    const l = raw0[i]
+    if (!l) continue
+    // docx 表格流常见："A、" 或 "A" 单独一行，下一行才是选项内容
+    if (/^[A-F][、.．：:]?\s*$/.test(l) && i + 1 < raw0.length && raw0[i + 1]) {
+      rawLines.push(`${l}${raw0[++i].trim()}`)
+      continue
+    }
+    rawLines.push(l)
+  }
   // 2) 按"题号行"切块：每块 = 题号行 + 后续直到下一题号行或文件尾
   interface Block { no: number; first: string; rest: string[] }
   const blocks: Block[] = []
