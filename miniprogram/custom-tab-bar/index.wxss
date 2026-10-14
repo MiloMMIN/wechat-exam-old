@@ -8,6 +8,12 @@
   box-shadow: 0 -4rpx 16rpx rgba(0,0,0,.05);
   z-index: 99;
 }
+
+/* 左侧三个等分 */
+.tab-group {
+  flex: 1;
+  display: flex;
+}
 .tab-item {
   flex: 1;
   display: flex; flex-direction: column;
@@ -19,55 +25,64 @@
 .icon { width: 44rpx; height: 44rpx; position: relative; }
 
 /* 题库：三本堆叠的书 */
-.icon-books .book {
-  position: absolute;
-  border-radius: 4rpx;
-  border: 2rpx solid currentColor;
-}
-.book-1 { width: 16rpx; height: 26rpx; left: 4rpx; top: 10rpx; transform: rotate(-8deg); color: #9aa0a6; }
-.book-2 { width: 16rpx; height: 30rpx; left: 14rpx; top: 6rpx;  color: #9aa0a6; }
-.book-3 { width: 16rpx; height: 26rpx; right: 4rpx; top: 10rpx; transform: rotate(8deg); color: #9aa0a6; }
-.tab-item.active .book-1 { color: #ff6b6b; }
-.tab-item.active .book-2 { color: #07c160; }
-.tab-item.active .book-3 { color: #339af0; }
+.icon-books .book { position:absolute; border-radius:4rpx; border:2rpx solid #9aa0a6; }
+.book-1 { width:14rpx; height:24rpx; left:6rpx; top:12rpx; transform:rotate(-8deg); }
+.book-2 { width:14rpx; height:28rpx; left:16rpx; top:8rpx; }
+.book-3 { width:14rpx; height:24rpx; right:6rpx; top:12rpx; transform:rotate(8deg); }
+.tab-item.active .book-1 { border-color:#ff6b6b; }
+.tab-item.active .book-2 { border-color:#07c160; }
+.tab-item.active .book-3 { border-color:#339af0; }
 
-/* 文档：页角折叠的纸 */
+/* 文档：折角纸 */
 .icon-doc .doc-page {
-  position: absolute;
-  inset: 4rpx 8rpx;
-  border: 2rpx solid #9aa0a6;
-  border-radius: 4rpx;
-  border-top-right-radius: 12rpx;
+  position:absolute; inset:4rpx 8rpx;
+  border:2rpx solid #9aa0a6;
+  border-radius:4rpx; border-top-right-radius:12rpx;
 }
 .icon-doc .doc-page::after {
-  content: '';
-  position: absolute;
-  top: -2rpx; right: -2rpx;
-  width: 12rpx; height: 12rpx;
-  background: #fff;
-  border-left: 2rpx solid #9aa0a6;
-  border-bottom: 2rpx solid #9aa0a6;
-  border-bottom-left-radius: 6rpx;
+  content:''; position:absolute; top:-2rpx; right:-2rpx;
+  width:12rpx; height:12rpx;
+  background:#fff;
+  border-left:2rpx solid #9aa0a6; border-bottom:2rpx solid #9aa0a6;
+  border-bottom-left-radius:6rpx;
 }
 .icon-doc .doc-lines {
-  position: absolute;
-  left: 16rpx; right: 16rpx; top: 16rpx;
-  height: 2rpx;
-  background: #9aa0a6;
-  box-shadow: 0 8rpx 0 #9aa0a6, 0 16rpx 0 #9aa0a6;
+  position:absolute; left:14rpx; right:14rpx; top:18rpx;
+  height:2rpx; background:#9aa0a6;
+  box-shadow:0 7rpx 0 #9aa0a6, 0 14rpx 0 #9aa0a6;
 }
-.tab-item.active .doc-page, .tab-item.active .doc-page::after { border-color: #07c160; }
-.tab-item.active .doc-lines { background: #07c160; box-shadow: 0 8rpx 0 #07c160, 0 16rpx 0 #07c160; }
+.tab-item.active .doc-page, .tab-item.active .doc-page::after { border-color:#07c160; }
+.tab-item.active .doc-lines { background:#07c160; box-shadow:0 7rpx 0 #07c160, 0 14rpx 0 #07c160; }
 
-/* 中央 + */
-.tab-item.center { justify-content: flex-start; }
-.center-btn {
-  width: 96rpx; height: 96rpx;
-  border-radius: 28rpx;
-  background: linear-gradient(135deg, #b37feb, #5c7cfa);
-  margin-top: -28rpx;
-  box-shadow: 0 8rpx 20rpx rgba(92,124,250,.4), 0 0 0 6rpx #fff;
+/* 我的：人形 */
+.icon-user .u-head {
+  position:absolute; width:14rpx; height:14rpx;
+  border-radius:50%; border:2rpx solid #9aa0a6;
+  left:50%; top:4rpx; transform:translateX(-50%);
+}
+.icon-user .u-body {
+  position:absolute; width:28rpx; height:14rpx;
+  border:2rpx solid #9aa0a6; border-bottom:none;
+  border-radius:20rpx 20rpx 0 0;
+  left:50%; bottom:4rpx; transform:translateX(-50%);
+}
+.tab-item.active .u-head, .tab-item.active .u-body { border-color:#07c160; }
+
+/* 右侧 + 浮动按钮 */
+.fab {
+  width: 140rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+}
+.fab-btn {
+  width: 96rpx; height: 96rpx;
+  border-radius: 30rpx;
+  background: linear-gradient(135deg, #b37feb, #5c7cfa);
+  box-shadow: 0 8rpx 20rpx rgba(92,124,250,.45), 0 0 0 6rpx #fff;
+  position: absolute;
+  top: -20rpx;
   display: flex; align-items: center; justify-content: center;
 }
 .plus-v, .plus-h {
@@ -75,26 +90,5 @@
   background: #fff;
   border-radius: 3rpx;
 }
-.plus-v { width: 4rpx; height: 40rpx; }
-.plus-h { width: 40rpx; height: 4rpx; }
-
-/* 我的：人形 */
-.icon-user .u-head {
-  position: absolute;
-  width: 14rpx; height: 14rpx;
-  border-radius: 50%;
-  border: 2rpx solid #9aa0a6;
-  left: 50%; top: 4rpx;
-  transform: translateX(-50%);
-}
-.icon-user .u-body {
-  position: absolute;
-  width: 28rpx; height: 14rpx;
-  border: 2rpx solid #9aa0a6;
-  border-bottom: none;
-  border-radius: 20rpx 20rpx 0 0;
-  left: 50%; bottom: 4rpx;
-  transform: translateX(-50%);
-}
-.tab-item.active .u-head { border-color: #07c160; }
-.tab-item.active .u-body { border-color: #07c160; }
+.plus-v { width: 4rpx; height: 36rpx; }
+.plus-h { width: 36rpx; height: 4rpx; }

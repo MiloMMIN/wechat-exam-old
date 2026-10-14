@@ -1,30 +1,23 @@
 <view class="tab-bar">
-  <view class="tab-item {{selected === 0 ? 'active' : ''}}" data-path="/pages/index/index" data-idx="0" bindtap="switchTab">
-    <view class="icon icon-books">
-      <view class="book book-1"></view>
-      <view class="book book-2"></view>
-      <view class="book book-3"></view>
+  <view class="tab-group">
+    <view class="tab-item {{selected === 0 ? 'active' : ''}}" data-path="/pages/index/index" data-idx="0" bindtap="switchTab">
+      <view class="icon icon-books">
+        <view class="book book-1"></view><view class="book book-2"></view><view class="book book-3"></view>
+      </view>
+      <text class="tab-text">题库</text>
     </view>
-    <text class="tab-text">题库</text>
-  </view>
-  <view class="tab-item {{selected === 1 ? 'active' : ''}}" data-path="/pages/docs/index" data-idx="1" bindtap="switchTab">
-    <view class="icon icon-doc">
-      <view class="doc-page"></view>
-      <view class="doc-lines"></view>
+    <view class="tab-item {{selected === 1 ? 'active' : ''}}" data-path="/pages/docs/index" data-idx="1" bindtap="switchTab">
+      <view class="icon icon-doc"><view class="doc-page"></view><view class="doc-lines"></view></view>
+      <text class="tab-text">文档</text>
     </view>
-    <text class="tab-text">文档</text>
-  </view>
-  <view class="tab-item center" data-path="/pages/import/index" data-idx="2" bindtap="switchTab">
-    <view class="center-btn">
-      <view class="plus-v"></view>
-      <view class="plus-h"></view>
+    <view class="tab-item {{selected === 3 ? 'active' : ''}}" data-path="/pages/mine/index" data-idx="3" bindtap="switchTab">
+      <view class="icon icon-user"><view class="u-head"></view><view class="u-body"></view></view>
+      <text class="tab-text">我的</text>
     </view>
   </view>
-  <view class="tab-item {{selected === 3 ? 'active' : ''}}" data-path="/pages/mine/index" data-idx="3" bindtap="switchTab">
-    <view class="icon icon-user">
-      <view class="u-head"></view>
-      <view class="u-body"></view>
+  <view class="fab" data-path="/pages/import/index" data-idx="2" bindtap="switchTab">
+    <view class="fab-btn">
+      <view class="plus-v"></view><view class="plus-h"></view>
     </view>
-    <text class="tab-text">我的</text>
   </view>
 </view>
