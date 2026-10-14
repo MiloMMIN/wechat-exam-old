@@ -1,6 +1,5 @@
 .tab-bar {
   position: fixed; left: 0; right: 0; bottom: 0;
-  display: flex;
   background: #fff;
   border-top: 1rpx solid #e8eaed;
   padding-bottom: env(safe-area-inset-bottom);
@@ -9,10 +8,10 @@
   z-index: 99;
 }
 
-/* 左侧三个等分 */
+/* 三个等分项占满整行 */
 .tab-group {
-  flex: 1;
   display: flex;
+  width: 100%;
 }
 .tab-item {
   flex: 1;
@@ -24,7 +23,6 @@
 
 .icon { width: 44rpx; height: 44rpx; position: relative; }
 
-/* 题库：三本堆叠的书 */
 .icon-books .book { position:absolute; border-radius:4rpx; border:2rpx solid #9aa0a6; }
 .book-1 { width:14rpx; height:24rpx; left:6rpx; top:12rpx; transform:rotate(-8deg); }
 .book-2 { width:14rpx; height:28rpx; left:16rpx; top:8rpx; }
@@ -33,7 +31,6 @@
 .tab-item.active .book-2 { border-color:#07c160; }
 .tab-item.active .book-3 { border-color:#339af0; }
 
-/* 文档：折角纸 */
 .icon-doc .doc-page {
   position:absolute; inset:4rpx 8rpx;
   border:2rpx solid #9aa0a6;
@@ -54,7 +51,6 @@
 .tab-item.active .doc-page, .tab-item.active .doc-page::after { border-color:#07c160; }
 .tab-item.active .doc-lines { background:#07c160; box-shadow:0 7rpx 0 #07c160, 0 14rpx 0 #07c160; }
 
-/* 我的：人形 */
 .icon-user .u-head {
   position:absolute; width:14rpx; height:14rpx;
   border-radius:50%; border:2rpx solid #9aa0a6;
@@ -68,27 +64,22 @@
 }
 .tab-item.active .u-head, .tab-item.active .u-body { border-color:#07c160; }
 
-/* 右侧 + 浮动按钮 */
+/* + 悬浮在栏上方居中，不占整行宽度 */
 .fab {
-  width: 140rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: -32rpx;
+  transform: translateX(-50%);
+  z-index: 100;
 }
 .fab-btn {
   width: 96rpx; height: 96rpx;
   border-radius: 30rpx;
   background: linear-gradient(135deg, #b37feb, #5c7cfa);
-  box-shadow: 0 8rpx 20rpx rgba(92,124,250,.45), 0 0 0 6rpx #fff;
-  position: absolute;
-  top: -20rpx;
+  box-shadow: 0 10rpx 22rpx rgba(92,124,250,.45), 0 0 0 6rpx #fff;
   display: flex; align-items: center; justify-content: center;
+  position: relative;
 }
-.plus-v, .plus-h {
-  position: absolute;
-  background: #fff;
-  border-radius: 3rpx;
-}
+.plus-v, .plus-h { position: absolute; background: #fff; border-radius: 3rpx; }
 .plus-v { width: 4rpx; height: 36rpx; }
 .plus-h { width: 36rpx; height: 4rpx; }
