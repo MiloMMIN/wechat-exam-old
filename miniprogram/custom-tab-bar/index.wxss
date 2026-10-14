@@ -7,12 +7,7 @@
   box-shadow: 0 -4rpx 16rpx rgba(0,0,0,.05);
   z-index: 99;
 }
-
-/* 三个等分项占满整行 */
-.tab-group {
-  display: flex;
-  width: 100%;
-}
+.tab-group { display: flex; width: 100%; }
 .tab-item {
   flex: 1;
   display: flex; flex-direction: column;
@@ -63,23 +58,3 @@
   left:50%; bottom:4rpx; transform:translateX(-50%);
 }
 .tab-item.active .u-head, .tab-item.active .u-body { border-color:#07c160; }
-
-/* + 悬浮在栏上方居中，不占整行宽度 */
-.fab {
-  position: absolute;
-  left: 50%;
-  top: -32rpx;
-  transform: translateX(-50%);
-  z-index: 100;
-}
-.fab-btn {
-  width: 96rpx; height: 96rpx;
-  border-radius: 30rpx;
-  background: linear-gradient(135deg, #b37feb, #5c7cfa);
-  box-shadow: 0 10rpx 22rpx rgba(92,124,250,.45), 0 0 0 6rpx #fff;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-.plus-v, .plus-h { position: absolute; background: #fff; border-radius: 3rpx; }
-.plus-v { width: 4rpx; height: 36rpx; }
-.plus-h { width: 36rpx; height: 4rpx; }

@@ -1,4 +1,4 @@
-// pages/index/index.ts —— 题库主页（参考考试宝布局）
+// pages/index/index.ts —— 题库主页
 import { getActiveBank, setActiveBank, listBanks, BUILTIN_ID } from '../../utils/bank-store'
 import { mistakeStore, favoriteStore, cullStore, learnProgress, getDoneMap, getExamHistory, getNotes } from '../../utils/store'
 import { practicePool } from '../../utils/quiz'
@@ -33,7 +33,7 @@ Page({
       bankName: bank.name,
       bankList: banks.map(b => ({ id: b.id, name: b.name })),
       bankIdx: Math.max(0, banks.findIndex(b => b.id === bank.id)),
-      total: bank.questions.length,
+      total: pool.length,
       doneCount: Object.keys(getDoneMap(bank.id)).length,
       mistakeCount: mistakeStore.ids(bank.id).length,
       favCount: favoriteStore.ids(bank.id).length,
@@ -42,8 +42,6 @@ Page({
       learnCursor: cursor,
       lastExam: history[0] || null,
     })
-    // 进度：实际剩余可刷题数
-    this.setData({ total: pool.length })
   },
 
   onBankChange(e: WechatMiniprogram.PickerChange) {
@@ -54,34 +52,15 @@ Page({
     this.onShow()
   },
 
-  goLearn() {
-    wx.navigateTo({ url: '../learn/index?mode=seq' })
-  },
-  goRandom() {
-    wx.navigateTo({ url: '../learn/index?mode=random' })
-  },
-  goType() {
-    wx.navigateTo({ url: '../learn/index?mode=type' })
-  },
-  goChapter() {
-    wx.navigateTo({ url: '../learn/index?mode=chapter' })
-  },
-  goExam() {
-    wx.navigateTo({ url: '../exam-settings/index' })
-  },
-  goMistake() {
-    wx.navigateTo({ url: '../mistake/index' })
-  },
-  goFavorite() {
-    wx.navigateTo({ url: '../favorite/index' })
-  },
-  goCull() {
-    wx.navigateTo({ url: '../cull/index' })
-  },
-  goNotes() {
-    wx.navigateTo({ url: '../notes/index' })
-  },
-  goBankDetail() {
-    wx.navigateTo({ url: `../bank-detail/index?id=${this.data.bankId}` })
-  },
+  goLearn() { wx.navigateTo({ url: '../learn/index?mode=seq' }) },
+  goRandom() { wx.navigateTo({ url: '../learn/index?mode=random' }) },
+  goType() { wx.navigateTo({ url: '../learn/index?mode=type' }) },
+  goChapter() { wx.navigateTo({ url: '../learn/index?mode=chapter' }) },
+  goExam() { wx.navigateTo({ url: '../exam-settings/index' }) },
+  goMistake() { wx.navigateTo({ url: '../mistake/index' }) },
+  goFavorite() { wx.navigateTo({ url: '../favorite/index' }) },
+  goCull() { wx.navigateTo({ url: '../cull/index' }) },
+  goNotes() { wx.navigateTo({ url: '../notes/index' }) },
+  goBankDetail() { wx.navigateTo({ url: `../bank-detail/index?id=${this.data.bankId}` }) },
+  goImport() { wx.navigateTo({ url: '../import/index' }) },
 })

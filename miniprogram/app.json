@@ -27,7 +27,6 @@
     "list": [
       { "pagePath": "pages/index/index", "text": "题库" },
       { "pagePath": "pages/docs/index", "text": "文档" },
-      { "pagePath": "pages/import/index", "text": " " },
       { "pagePath": "pages/mine/index", "text": "我的" }
     ]
   },

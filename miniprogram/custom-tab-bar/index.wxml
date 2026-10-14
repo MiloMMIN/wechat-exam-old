@@ -1,12 +1,4 @@
 <view class="tab-bar">
-  <!-- 中间悬浮 +（绝对定位浮起） -->
-  <view class="fab" data-path="/pages/import/index" data-idx="2" bindtap="switchTab">
-    <view class="fab-btn">
-      <view class="plus-v"></view><view class="plus-h"></view>
-    </view>
-  </view>
-
-  <!-- 三个等分 tab -->
   <view class="tab-group">
     <view class="tab-item {{selected === 0 ? 'active' : ''}}" data-path="/pages/index/index" data-idx="0" bindtap="switchTab">
       <view class="icon icon-books">
@@ -18,7 +10,7 @@
       <view class="icon icon-doc"><view class="doc-page"></view><view class="doc-lines"></view></view>
       <text class="tab-text">文档</text>
     </view>
-    <view class="tab-item {{selected === 3 ? 'active' : ''}}" data-path="/pages/mine/index" data-idx="3" bindtap="switchTab">
+    <view class="tab-item {{selected === 2 ? 'active' : ''}}" data-path="/pages/mine/index" data-idx="2" bindtap="switchTab">
       <view class="icon icon-user"><view class="u-head"></view><view class="u-body"></view></view>
       <text class="tab-text">我的</text>
     </view>

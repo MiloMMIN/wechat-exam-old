@@ -9,7 +9,7 @@
     </view>
   </picker>
 
-  <!-- 4 快捷入口：错题/收藏/斩题/笔记 -->
+  <!-- 4 快捷入口 -->
   <view class="quick-row">
     <view class="quick-item" bindtap="goMistake">
       <view class="quick-circle red"><text>✕</text></view>
@@ -29,7 +29,7 @@
     </view>
   </view>
 
-  <!-- 题库练习 2 列卡 -->
+  <!-- 题库练习 -->
   <view class="section-title">题库练习</view>
   <view class="grid">
     <view class="g-card g-green" bindtap="goLearn">
@@ -55,10 +55,15 @@
     </view>
   </view>
 
-  <!-- 功能推荐 -->
+  <!-- 功能 -->
   <view class="section-title">功能</view>
   <view class="feat-row">
     <view class="feat" bindtap="goBankDetail"><text class="feat-icon">📤</text><text class="feat-text">分享题库</text></view>
     <view class="feat" bindtap="goBankDetail"><text class="feat-icon">📋</text><text class="feat-text">题库详情</text></view>
   </view>
+</view>
+
+<!-- 右下角悬浮 +（只在本页出现） -->
+<view class="fab-home" bindtap="goImport">
+  <view class="fab-v"></view><view class="fab-h"></view>
 </view>

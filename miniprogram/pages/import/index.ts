@@ -17,10 +17,7 @@ Page({
     expandText: false,
   },
 
-  onShow() {
-    const tab = this.getTabBar?.()
-    tab?.setData({ selected: 2 })
-  },
+
 
   onName(e: WechatMiniprogram.Input) { this.setData({ name: e.detail.value }) },
   onRaw(e: WechatMiniprogram.Input) { this.setData({ raw: e.detail.value }) },

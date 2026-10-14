@@ -60,3 +60,23 @@
 .feat { display: flex; flex-direction: column; align-items: center; }
 .feat-icon { font-size: 48rpx; }
 .feat-text { font-size: 24rpx; color: #555; margin-top: 8rpx; }
+
+/* 右下角悬浮 + 按钮，仅本页 */
+.fab-home {
+  position: fixed;
+  right: 40rpx;
+  bottom: calc(140rpx + env(safe-area-inset-bottom));
+  width: 104rpx; height: 104rpx;
+  border-radius: 32rpx;
+  background: linear-gradient(135deg, #b37feb, #5c7cfa);
+  box-shadow: 0 12rpx 28rpx rgba(92,124,250,.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 90;
+}
+.fab-v, .fab-h {
+  position: absolute;
+  background: #fff;
+  border-radius: 3rpx;
+}
+.fab-v { width: 4rpx; height: 40rpx; }
+.fab-h { width: 40rpx; height: 4rpx; }
