@@ -1,0 +1,14 @@
+{
+  "name": "wechat-exam",
+  "version": "1.0.0",
+  "description": "电子商务师刷题小程序：学习模式 / 模拟考试 / 错题本",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "@types/node": "^25.9.9",
+    "miniprogram-api-typings": "^2.12.0",
+    "typescript": "^5.9.3"
+  }
+}

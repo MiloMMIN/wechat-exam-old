@@ -1,0 +1,59 @@
+.exam-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx 28rpx;
+  margin-bottom: 20rpx;
+}
+.exam-stat { display: flex; flex-direction: column; gap: 6rpx; }
+.exam-clock { font-size: 34rpx; font-weight: 700; color: #222; }
+.exam-clock.danger { color: #fa5151; }
+.exam-prog { font-size: 24rpx; color: #999; }
+.exam-actions { display: flex; gap: 16rpx; }
+.mini-btn {
+  font-size: 26rpx;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  background: #f0f1f3;
+  color: #333;
+}
+.mini-btn.primary { background: #07c160; color: #fff; }
+
+.opt.chosen {
+  border-color: #07c160;
+  background: #f0fbf4;
+}
+.opt.chosen .opt-label, .opt.chosen .opt-text { color: #07c160; font-weight: 600; }
+
+.sheet-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  display: flex; align-items: flex-end;
+  z-index: 99;
+}
+.sheet-panel {
+  width: 100%;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx;
+  box-sizing: border-box;
+  max-height: 70vh;
+  display: flex; flex-direction: column;
+}
+.sheet-title { font-size: 30rpx; font-weight: 600; margin-bottom: 20rpx; }
+.sheet-grid { max-height: 45vh; }
+.sheet-cell {
+  display: inline-flex;
+  width: 80rpx; height: 80rpx;
+  align-items: center; justify-content: center;
+  margin: 8rpx;
+  border-radius: 12rpx;
+  background: #f5f6f8;
+  font-size: 28rpx;
+  color: #555;
+}
+.sheet-cell.done { background: #dcf5e6; color: #07c160; font-weight: 600; }
+.sheet-cell.cur { outline: 4rpx solid #07c160; }
+.sheet-close { margin-top: 20rpx; }

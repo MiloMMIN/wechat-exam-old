@@ -1,0 +1,14 @@
+.result { display: flex; flex-direction: column; }
+.score-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 60rpx 32rpx;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+.score-num { font-size: 120rpx; font-weight: 800; line-height: 1; }
+.score-num.pass { color: #07c160; }
+.score-num.fail { color: #fa5151; }
+.score-label { font-size: 26rpx; color: #999; margin: 16rpx 0 30rpx; }
+.score-row { display: flex; justify-content: space-around; font-size: 28rpx; color: #333; }
+.fail-text { color: #fa5151; }

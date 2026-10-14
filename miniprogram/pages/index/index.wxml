@@ -1,0 +1,63 @@
+<navigation-bar title="电子商务师刷题" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="container home">
+
+  <view class="stat-card">
+    <view class="stat-row">
+      <view class="stat-item">
+        <view class="stat-num">{{doneCount}}</view>
+        <view class="stat-label">已刷</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-num">{{total}}</view>
+        <view class="stat-label">总题数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-num warn">{{mistakeCount}}</view>
+        <view class="stat-label">错题</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-num accent">{{favCount}}</view>
+        <view class="stat-label">收藏</view>
+      </view>
+    </view>
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{total ? doneCount / total * 100 : 0}}%"></view>
+    </view>
+    <view class="stat-tip">学习进度：第 {{learnIndex + 1}} 题 / {{total}} 题</view>
+  </view>
+
+  <view class="menu">
+    <button class="menu-btn primary" bindtap="goLearn">
+      <text class="menu-title">顺序学习</text>
+      <text class="menu-sub">从第 {{learnIndex + 1}} 题继续，作答即判对错</text>
+    </button>
+    <button class="menu-btn" bindtap="goLearnRandom">
+      <text class="menu-title">随机练习</text>
+      <text class="menu-sub">打乱顺序刷全库</text>
+    </button>
+    <button class="menu-btn" bindtap="goFavorite">
+      <text class="menu-title">收藏夹</text>
+      <text class="menu-sub">只看收藏过的题</text>
+    </button>
+    <button class="menu-btn warn-btn" bindtap="goMistake">
+      <text class="menu-title">错题本</text>
+      <text class="menu-sub">{{mistakeCount}} 道错题，答对可移出</text>
+    </button>
+
+    <view class="exam-box">
+      <view class="exam-title">模拟考试</view>
+      <view class="exam-form">
+        <view class="exam-field">40 题 · 60 分钟 · 到时自动交卷</view>
+      </view>
+      <button class="menu-btn primary" bindtap="goExam">
+        <text class="menu-title">开始考试</text>
+        <text class="menu-sub" wx:if="{{lastExam}}">上次：{{lastExam.score}} 分（{{lastExam.total}} 题）</text>
+        <text class="menu-sub" wx:else>随机抽 40 题，60 分钟到时自动交卷</text>
+      </button>
+    </view>
+
+    <button class="menu-btn ghost" bindtap="resetProgress">
+      <text class="menu-title">清空全部数据</text>
+    </button>
+  </view>
+</view>

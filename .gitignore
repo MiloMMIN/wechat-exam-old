@@ -1,0 +1,4 @@
+node_modules/
+~$*
+*.docx.tmp
+.DS_Store

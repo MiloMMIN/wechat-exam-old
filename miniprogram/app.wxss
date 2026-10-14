@@ -1,0 +1,90 @@
+/**app.wxss**/
+page {
+  min-height: 100vh;
+  background: #f6f7f9;
+}
+
+.container {
+  padding: 20rpx 24rpx 60rpx;
+  box-sizing: border-box;
+}
+
+/* 题卡 */
+.q-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.q-meta {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.q-stem {
+  font-size: 32rpx;
+  line-height: 1.6;
+  color: #222;
+  margin-bottom: 24rpx;
+}
+
+.opt {
+  display: flex;
+  align-items: flex-start;
+  padding: 24rpx;
+  border: 2rpx solid #e5e6eb;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  font-size: 30rpx;
+  line-height: 1.5;
+  color: #333;
+  background: #fff;
+}
+
+.opt-label {
+  flex-shrink: 0;
+  width: 44rpx;
+  font-weight: 600;
+  color: #666;
+}
+
+.opt-text {
+  flex: 1;
+}
+
+.opt.correct {
+  border-color: #07c160;
+  background: #f0fbf4;
+}
+.opt.correct .opt-label,
+.opt.correct .opt-text {
+  color: #07c160;
+}
+
+.opt.wrong {
+  border-color: #fa5151;
+  background: #fef2f2;
+}
+.opt.wrong .opt-label,
+.opt.wrong .opt-text {
+  color: #fa5151;
+}
+
+.opt.disabled {
+  opacity: 0.6;
+}
+
+/* 底部操作条 */
+.footer-bar {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 10rpx;
+}
+.footer-bar button {
+  flex: 1;
+  font-size: 30rpx;
+}

@@ -1,0 +1,47 @@
+<navigation-bar title="模拟考试" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="exam-head">
+    <view class="exam-stat">
+      <text class="exam-clock {{secondsLeft < 300 ? 'danger' : ''}}">⏱ {{timeText}}</text>
+      <text class="exam-prog">{{answeredCount}} / {{sheet.length}} 已答</text>
+    </view>
+    <view class="exam-actions">
+      <view class="mini-btn" bindtap="toggleSheet">答题卡</view>
+      <view class="mini-btn primary" bindtap="confirmSubmit">交卷</view>
+    </view>
+  </view>
+
+  <view wx:if="{{q}}" class="q-card">
+    <view class="q-meta">
+      <text>第 {{cursor + 1}} / {{sheet.length}} 题 · 原题号 {{q.id}}</text>
+    </view>
+    <view class="q-stem">{{q.q}}</view>
+    <block wx:for="{{opts}}" wx:key="letter">
+      <view class="opt {{item.state}}" data-idx="{{index}}" bindtap="choose">
+        <text class="opt-label">{{item.letter}}.</text>
+        <text class="opt-text">{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="footer-bar">
+    <button bindtap="prev" disabled="{{cursor === 0}}">上一题</button>
+    <button type="primary" bindtap="next" disabled="{{cursor === sheet.length - 1}}">下一题</button>
+  </view>
+
+  <!-- 答题卡弹层 -->
+  <view wx:if="{{showSheet}}" class="sheet-mask" bindtap="toggleSheet">
+    <view class="sheet-panel" catchtap="onSheetPanelTap">
+      <view class="sheet-title">答题卡（{{answeredCount}}/{{sheet.length}}）</view>
+      <scroll-view scroll-y class="sheet-grid">
+        <view
+          wx:for="{{sheet}}" wx:key="index"
+          class="sheet-cell {{item.chosen >= 0 ? 'done' : ''}} {{index === cursor ? 'cur' : ''}}"
+          data-n="{{index}}" bindtap="jumpTo">
+          {{index + 1}}
+        </view>
+      </scroll-view>
+      <button class="sheet-close" bindtap="toggleSheet">关闭</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,17 @@
+<navigation-bar title="考试成绩" back="{{false}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container result">
+  <view class="score-card">
+    <view class="score-num {{pass ? 'pass' : 'fail'}}">{{score}}</view>
+    <view class="score-label">{{pass ? '合格' : '不合格'}}（60 分合格）</view>
+    <view class="score-row">
+      <view class="score-item">✔ {{right}} 题</view>
+      <view class="score-item fail-text">✘ {{wrong}} 题</view>
+      <view class="score-item">用时 {{secondsText}}</view>
+    </view>
+  </view>
+
+  <view class="footer-bar">
+    <button bindtap="goHome">回首页</button>
+    <button type="primary" bindtap="again">再考一次</button>
+  </view>
+</view>

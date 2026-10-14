@@ -1,0 +1,45 @@
+<navigation-bar title="{{title}}" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view wx:if="{{emptyText}}" class="empty">{{emptyText}}</view>
+
+  <block wx:elif="{{q}}">
+    <view class="q-card">
+      <view class="q-meta">
+        <text>第 {{cursor + 1}} / {{poolSize}} 题 · 原题号 {{q.id}}</text>
+        <text>{{doneInSession}} 题已答 · 对 {{rightCount}}</text>
+      </view>
+      <view class="q-stem">{{q.q}}</view>
+
+      <block wx:for="{{opts}}" wx:key="letter">
+        <view class="opt {{item.state}}" data-idx="{{index}}" bindtap="choose">
+          <text class="opt-label">{{item.letter}}.</text>
+          <text class="opt-text">{{item.text}}</text>
+        </view>
+      </block>
+
+      <view wx:if="{{answered}}" class="verdict {{opts[q.a] ? '' : ''}}">
+        正确答案：{{opts[q.a].letter}} · {{opts[q.a].text}}
+      </view>
+    </view>
+
+    <view class="tool-row">
+      <view class="tool" bindtap="toggleFav">
+        <text class="tool-icon">{{isFav ? '★' : '☆'}}</text>
+        <text class="tool-text">{{isFav ? '已收藏' : '收藏'}}</text>
+      </view>
+      <view class="tool" bindtap="toggleMistake">
+        <text class="tool-icon">{{isMistake ? '✕' : '＋'}}</text>
+        <text class="tool-text">{{isMistake ? '移出错题本' : '加入错题本'}}</text>
+      </view>
+      <view class="tool jump">
+        <text class="tool-text">跳转</text>
+        <input class="jump-input" type="number" placeholder="题号" confirm-type="go" bindconfirm="jumpTo" />
+      </view>
+    </view>
+
+    <view class="footer-bar">
+      <button bindtap="prev" disabled="{{cursor === 0}}">上一题</button>
+      <button type="primary" bindtap="next">{{answered ? '下一题' : '跳过'}}</button>
+    </view>
+  </block>
+</view>
