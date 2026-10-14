@@ -7,10 +7,7 @@ export interface ParseResult {
   warnings: string[]
 }
 
-const OPT_RE = /^([A-F])\s*[、.．：:]\s*(.+)$/
-const OPT_BARE_RE = /^([A-F])\s+(.+)$/
 const ANS_RE = /【参考答案】\s*([A-F])/                         // docx 原格式
-const ANS_RE2 = /^(?:参考答案|答案|答)\s*[:：]?\s*([A-F])\s*$/  // 简写格式
 const Q_RE = /^(?:第\s*)?(\d+)\s*[题\.、．]\s*(.+)$/
 
 function cleanStem(s: string): string {
@@ -68,28 +65,45 @@ export function parseText(input: string): ParseResult {
     blocks.push({ no: 0, first: '', rest: rawLines })
   }
 
+  // 逐题处理：把块内字符串拼成一段，然后用全局正则按 "字母+选项" 位置切片
   for (const b of blocks) {
-    const stemLines: string[] = b.first ? [b.first] : []
+    // 先合成一段：题干行 + 选项/答案行全黏起来，再由正则切
+    const seg = [b.first, ...b.rest].join('\n')
+    // 统一"答案"分隔：把 【参考答案】X 提到段尾
+    const ansMatch = ANS_RE.exec(seg) || /(?:参考答案|答案|答)\s*[:：]?\s*([A-F])\s*$/.exec(seg)
+    const answer = ansMatch ? ansMatch[1] : ''
+
+    // 定位第一个选项起始（行首字母+分隔符）
+    const firstOptM = /(?:^|\n)\s*([A-F])\s*[、.．：:]\s*/.exec(seg)
+    if (!firstOptM) {
+      warnings.push(`跳过无效题块：${(seg.slice(0, 30))}（无选项）`)
+      continue
+    }
+    const stemEnd = firstOptM.index + (firstOptM[0].startsWith('\n') ? 1 : 0)
+    const stem = cleanStem(seg.slice(0, stemEnd))
+
+    // 选项段：从 firstOptM 到答案正则的起始位置
+    const ansStart = ansMatch ? ansMatch.index : seg.length
+    const optSeg = seg.slice(stemEnd, ansStart)
+    // 按 (字母)(、|.|：|:|空白) 切
     const opts: Record<string, string> = {}
-    let answer = ''
-
-    for (const line of b.rest) {
-      const am = ANS_RE.exec(line) || ANS_RE2.exec(line)
-      if (am) { answer = am[1]; continue }
-
-      const om = OPT_RE.exec(line) || OPT_BARE_RE.exec(line)
-      if (om) { opts[om[1]] = om[2].trim(); continue }
-
-      // 题干续行（例如"767.淘宝拍摄,一般只要( )盏闪光灯即可完成/拍摄"折行）
-      if (!answer) stemLines.push(line)
+    const optRe = /([A-F])\s*[、.．：:]\s*/g
+    const marks: { letter: string; start: number; end: number }[] = []
+    let mm: RegExpExecArray | null
+    while ((mm = optRe.exec(optSeg)) !== null) {
+      marks.push({ letter: mm[1], start: mm.index, end: mm.index + mm[0].length })
+    }
+    for (let i = 0; i < marks.length; i++) {
+      const cur = marks[i]
+      const nextStart = i + 1 < marks.length ? marks[i + 1].start : optSeg.length
+      opts[cur.letter] = optSeg.slice(cur.end, nextStart).trim().replace(/\s+/g, ' ')
     }
 
-    const stem = cleanStem(stemLines.join(' '))
     const optList = ['A', 'B', 'C', 'D', 'E', 'F'].map(l => opts[l] || '')
     while (optList.length && !optList[optList.length - 1]) optList.pop()
 
     if (!stem || optList.length < 2 || !answer || !opts[answer]) {
-      warnings.push(`跳过无效题块：${(stem || `题 ${b.no}`).slice(0, 30)}`)
+      warnings.push(`跳过无效题块：${stem.slice(0, 30) || `(题 ${b.no})`}`)
       continue
     }
     questions.push({ id: b.no || questions.length + 1, q: stem, o: optList, a: 'ABCDEF'.indexOf(answer) })
