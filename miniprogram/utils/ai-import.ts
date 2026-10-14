@@ -1,77 +1,92 @@
 // utils/ai-import.ts —— 把"格式化文本"解析成 Question[]
-// AI 接口预留：parseWithAI 现在是占位实现（仅调本地正则），未来可换成后端调用。
+// AI 接口预留：parseWithAI 现在是占位实现（本地正则），未来可换成后端调用。
 import type { Question } from '../data/questions'
 
 export interface ParseResult {
   questions: Question[]
-  /** 解析失败的行/段提示 */
   warnings: string[]
 }
 
+const OPT_RE = /^([A-F])\s*[、.．：:]\s*(.+)$/
+const OPT_BARE_RE = /^([A-F])\s+(.+)$/
+const ANS_RE = /【参考答案】\s*([A-F])/                         // docx 原格式
+const ANS_RE2 = /^(?:参考答案|答案|答)\s*[:：]?\s*([A-F])\s*$/  // 简写格式
+const Q_RE = /^(?:第\s*)?(\d+)\s*[题\.、．]\s*(.+)$/
+
+function cleanStem(s: string): string {
+  return s.replace(/[   ​]/g, '').replace(/\s+/g, ' ').trim()
+}
+
 /**
- * 支持的"格式化文档"纯文本格式（每个题块 4~6 行）：
- *   题干...
- *   A. 选项        （也接受 A、选项 / A 选项 / A：选项）
- *   B. 选项
- *   C. 选项
- *   D. 选项
- *   答案：B         （或 答案:B / 参考答案 B / 答 B）
+ * 解析粘贴文本为题目列表。
+ * 兼容两种输入：
+ *  1) docx 直接复制的连续文本（无空行）：
+ *       766.题干...
+ *       A、高速
+ *       B、低速
+ *       【参考答案】A
+ *       767.题干...
+ *  2) 空行分隔的题块（每块独立题干+选项+答案行）
  *
- * 题块之间用空行分隔；题号可有可无。
+ * 内部统一成"按题号行切块"，块内逐行分类。
  */
 export function parseText(input: string): ParseResult {
   const warnings: string[] = []
   const questions: Question[] = []
 
-  // 按空行切块
-  const blocks = input.split(/\n\s*\n+/).map(b => b.trim()).filter(Boolean)
-  let autoId = 1
+  // 1) 全文行归一化
+  const rawLines = input
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(Boolean)
 
-  for (const block of blocks) {
-    const lines = block.split('\n').map(l => l.trim()).filter(Boolean)
-    if (!lines.length) continue
+  // 2) 按"题号行"切块：每块 = 题号行 + 后续直到下一题号行或文件尾
+  interface Block { no: number; first: string; rest: string[] }
+  const blocks: Block[] = []
+  let cur: Block | null = null
+  for (const line of rawLines) {
+    const m = Q_RE.exec(line)
+    if (m) {
+      cur = { no: parseInt(m[1]), first: m[2], rest: [] }
+      blocks.push(cur)
+    } else if (cur) {
+      cur.rest.push(line)
+    } else {
+      // 文件头的标题/前言——丢进警告让用户知道
+      if (line.length > 4) warnings.push(`跳过前言：${line.slice(0, 30)}`)
+    }
+  }
 
-    const stemLines: string[] = []
+  // 无题号场景：把全文当一个块尝试（兜底，基本走不到）
+  if (!blocks.length && rawLines.length) {
+    blocks.push({ no: 0, first: '', rest: rawLines })
+  }
+
+  for (const b of blocks) {
+    const stemLines: string[] = b.first ? [b.first] : []
     const opts: Record<string, string> = {}
     let answer = ''
-    let nextId = 0
 
-    for (const line of lines) {
-      const om = line.match(/^([A-F])\s*[、.．：:]\s*(.+)$/) || line.match(/^([A-F])\s+(.+)$/)
-      if (om) {
-        opts[om[1]] = om[2].trim()
-        continue
-      }
-      const am = line.match(/^(?:参考答案|答案|答)\s*[:：]?\s*([A-F])\s*$/)
-      if (am) {
-        answer = am[1]
-        continue
-      }
-      const qm = line.match(/^(?:第\s*)?(\d+)\s*[题\.、]\s*(.+)$/)
-      if (qm) {
-        nextId = parseInt(qm[1])
-        stemLines.push(qm[2])
-        continue
-      }
-      stemLines.push(line)
+    for (const line of b.rest) {
+      const am = ANS_RE.exec(line) || ANS_RE2.exec(line)
+      if (am) { answer = am[1]; continue }
+
+      const om = OPT_RE.exec(line) || OPT_BARE_RE.exec(line)
+      if (om) { opts[om[1]] = om[2].trim(); continue }
+
+      // 题干续行（例如"767.淘宝拍摄,一般只要( )盏闪光灯即可完成/拍摄"折行）
+      if (!answer) stemLines.push(line)
     }
 
-    const stem = stemLines.join(' ').trim()
+    const stem = cleanStem(stemLines.join(' '))
     const optList = ['A', 'B', 'C', 'D', 'E', 'F'].map(l => opts[l] || '')
-    // 截掉尾部空项
     while (optList.length && !optList[optList.length - 1]) optList.pop()
 
     if (!stem || optList.length < 2 || !answer || !opts[answer]) {
-      warnings.push(`跳过无效题块：${stem.slice(0, 30) || '(空题干)'}`)
+      warnings.push(`跳过无效题块：${(stem || `题 ${b.no}`).slice(0, 30)}`)
       continue
     }
-    questions.push({
-      id: nextId || autoId++,
-      q: stem,
-      o: optList,
-      a: 'ABCDEF'.indexOf(answer),
-    })
-    if (nextId) autoId = nextId + 1
+    questions.push({ id: b.no || questions.length + 1, q: stem, o: optList, a: 'ABCDEF'.indexOf(answer) })
   }
 
   return { questions, warnings }

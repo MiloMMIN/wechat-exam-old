@@ -1,4 +1,4 @@
-// pages/import/index.ts —— +号 AI 导题
+// pages/import/index.ts —— +号：粘贴文本 / 上传文件 / AI 导题（占位）
 import { parseWithAI } from '../../utils/ai-import'
 import { upsertBank, newBankId, setActiveBank } from '../../utils/bank-store'
 import { DEFAULT_EXAM_SETTINGS } from '../../utils/bank-format'
@@ -12,6 +12,7 @@ Page({
     warnings: [] as string[],
     parsedCount: 0,
     aiEnabled: false, // 占位：未来后端就绪后开
+    fileName: '',
   },
 
   onShow() {
@@ -24,7 +25,7 @@ Page({
 
   async doParse() {
     const text = this.data.raw.trim()
-    if (!text) { wx.showToast({ title: '先粘贴题目', icon: 'none' }); return }
+    if (!text) { wx.showToast({ title: '先粘贴题目或上传文件', icon: 'none' }); return }
     this.setData({ parsing: true })
     try {
       const res = await parseWithAI(text)
@@ -41,7 +42,7 @@ Page({
   },
 
   async doImport() {
-    const name = this.data.name.trim() || `自定义题库 ${new Date().toLocaleDateString()}`
+    const name = this.data.name.trim() || this.data.fileName.replace(/\.[^.]+$/, '') || `自定义题库 ${new Date().toLocaleDateString()}`
     if (!this.data.parsedCount) { wx.showToast({ title: '先解析', icon: 'none' }); return }
     const res = await parseWithAI(this.data.raw)
     const bank = {
@@ -59,8 +60,38 @@ Page({
   },
 
   pasteFromClipboard() {
-    wx.getClipboardData({
-      success: r => this.setData({ raw: r.data }),
+    wx.getClipboardData({ success: r => this.setData({ raw: r.data }) })
+  },
+
+  // 上传 .txt/.md/.kbz（docx 需先转文本，小程序内不解析二进制）
+  pickFile() {
+    wx.chooseMessageFile({
+      count: 1,
+      type: 'file',
+      extension: ['txt', 'md', 'kbz'],
+      success: res => {
+        const file = res.tempFiles[0]
+        if (!file) return
+        const fs = wx.getFileSystemManager()
+        try {
+          const text = fs.readFileSync(file.path, 'utf8') as string
+          // .kbz 直接导入为 bank；.txt/.md 先填到 textarea 再解析
+          if (file.name.endsWith('.kbz')) {
+            const { decodeBank } = require('../../utils/bank-format')
+            const bank = decodeBank(text)
+            if (bank) {
+              upsertBank(bank)
+              wx.showToast({ title: `导入 ${bank.questions.length} 题`, icon: 'success' })
+              setTimeout(() => wx.switchTab({ url: '/pages/index/index' }), 600)
+              return
+            }
+          }
+          this.setData({ raw: text, fileName: file.name })
+          wx.showToast({ title: '已读取文件，点解析', icon: 'none' })
+        } catch (e) {
+          wx.showToast({ title: '文件读取失败', icon: 'none' })
+        }
+      },
     })
   },
 })

@@ -11,3 +11,5 @@
 .btn-col { margin-top:10rpx; }
 .btn { margin-bottom:16rpx; }
 .btn.primary { background:#07c160; color:#fff; }
+.btn.primary { background:#07c160; color:#fff; }
+.btn.danger { color:#fa5151; }

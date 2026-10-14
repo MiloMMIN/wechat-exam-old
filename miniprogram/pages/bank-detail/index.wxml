@@ -19,7 +19,9 @@
   </view>
 
   <view class="btn-col">
-    <button class="btn primary" bindtap="exportFile">导出 .kbz 分享文件</button>
-    <button class="btn" wx:if="{{!isBuiltin}}" bindtap="deleteBank">删除题库</button>
+    <!-- 直接弹微信分享面板 -->
+    <button class="btn primary" open-type="share">分享给朋友</button>
+    <button class="btn" bindtap="exportFile">导出 .kbz 文件</button>
+    <button class="btn danger" wx:if="{{!isBuiltin}}" bindtap="deleteBank">删除题库</button>
   </view>
 </view>

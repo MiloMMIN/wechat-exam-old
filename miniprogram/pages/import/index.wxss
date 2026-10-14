@@ -17,5 +17,7 @@
 .pv-item:last-child { border-bottom:none; }
 .pv-q { font-size:28rpx; color:#222; margin-bottom:8rpx; }
 .pv-o { font-size:24rpx; color:#666; margin-bottom:6rpx; }
+.mini-row { display:flex; gap:12rpx; }
+.file-hint { font-size:22rpx; color:#999; font-weight:400; }
 .pv-a { font-size:24rpx; color:#07c160; }
 .ai-note { margin-top:20rpx; padding:20rpx; background:#e7f5ff; border-radius:12rpx; font-size:24rpx; color:#1971c2; }

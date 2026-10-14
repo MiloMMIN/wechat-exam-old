@@ -1,6 +1,6 @@
 <navigation-bar title="自定义题库" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="container">
-  <view class="tip">粘贴格式化文本，或先用 AI 导题（接口预留）。</view>
+  <view class="tip">粘贴格式化文本，或上传 .txt / .md 文件；.kbz 文件直接导入。</view>
 
   <view class="field">
     <text class="label">题库名</text>
@@ -9,12 +9,15 @@
 
   <view class="field">
     <view class="label-row">
-      <text class="label">题目文本</text>
-      <view class="mini" bindtap="pasteFromClipboard">从剪贴板粘贴</view>
+      <text class="label">题目文本 <text wx:if="{{fileName}}" class="file-hint">({{fileName}})</text></text>
+      <view class="mini-row">
+        <view class="mini" bindtap="pasteFromClipboard">粘贴</view>
+        <view class="mini" bindtap="pickFile">上传文件</view>
+      </view>
     </view>
     <textarea
       class="ta"
-      placeholder="题干...\nA. 选项\nB. 选项\nC. 选项\nD. 选项\n答案：B\n\n（空行分隔多题）"
+      placeholder="766.题干...\nA、选项A\nB、选项B\nC、选项C\nD、选项D\n【参考答案】A\n\n767.下一题..."
       value="{{raw}}"
       bindinput="onRaw"
       auto-height
