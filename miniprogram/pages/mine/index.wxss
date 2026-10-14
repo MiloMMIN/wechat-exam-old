@@ -1,0 +1,9 @@
+.card { background:#fff; border-radius:16rpx; padding:8rpx 28rpx; margin-bottom:20rpx; }
+.row { display:flex; justify-content:space-between; align-items:center; padding:24rpx 0; border-bottom:1rpx solid #f0f0f0; }
+.row:last-child { border-bottom:none; }
+.row.link { cursor:pointer; }
+.label { font-size:28rpx; color:#555; }
+.val { font-size:28rpx; color:#222; font-weight:600; }
+.val.accent { color:#07c160; }
+.arrow { color:#bbb; font-size:34rpx; }
+.danger { background:#fff; color:#fa5151; }

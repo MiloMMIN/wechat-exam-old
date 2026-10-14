@@ -16,11 +16,12 @@ Page({
     const right = parseInt(options.right || '0') || 0
     const total = parseInt(options.total || '0') || 0
     const seconds = parseInt(options.seconds || '0') || 0
+    const passScore = parseFloat(options.pass || '60') || 60
     this.setData({
       score, right, total,
       wrong: total - right,
       secondsText: fmtSeconds(seconds),
-      pass: score >= 60,
+      pass: score >= passScore,
     })
   },
 

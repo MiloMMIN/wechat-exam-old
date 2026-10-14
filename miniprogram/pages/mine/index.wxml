@@ -1,0 +1,18 @@
+<navigation-bar title="我的" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="card">
+    <view class="row"><text class="label">题库数</text><text class="val">{{bankCount}}</text></view>
+    <view class="row"><text class="label">考试次数</text><text class="val">{{examCount}}</text></view>
+    <view class="row" wx:if="{{best}}"><text class="label">最高分</text><text class="val accent">{{best.score}} 分</text></view>
+    <view class="row"><text class="label">版本</text><text class="val">{{version}}</text></view>
+  </view>
+
+  <view class="card">
+    <view class="row link" bindtap="copyShareHelp">
+      <text class="label">如何分享题库给朋友？</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <button class="danger" bindtap="clearAll">清空全部数据</button>
+</view>

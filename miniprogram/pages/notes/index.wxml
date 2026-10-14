@@ -1,0 +1,30 @@
+<navigation-bar title="题库笔记" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="add-box">
+    <textarea class="add-ta" placeholder="添加一条题库级笔记…" value="{{draft}}" bindinput="onDraft" auto-height maxlength="500" />
+    <button class="add-btn" bindtap="addBankNote">添加</button>
+  </view>
+
+  <view wx:if="{{emptyText}}" class="empty">{{emptyText}}</view>
+
+  <view wx:for="{{notes}}" wx:key="id" class="note-item">
+    <view class="note-q">{{item.qText}}</view>
+    <view wx:if="{{editingId === item.id}}">
+      <textarea class="edit-ta" value="{{editingText}}" bindinput="onEditInput" auto-height />
+      <view class="edit-row">
+        <view class="edit-btn" bindtap="cancelEdit">取消</view>
+        <view class="edit-btn primary" bindtap="saveEdit">保存</view>
+      </view>
+    </view>
+    <block wx:else>
+      <view class="note-text">{{item.text}}</view>
+      <view class="note-foot">
+        <text class="note-time">{{item.at}}</text>
+        <view class="note-ops">
+          <text class="note-op" data-id="{{item.id}}" bindtap="startEdit">编辑</text>
+          <text class="note-op danger" data-id="{{item.id}}" bindtap="del">删除</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

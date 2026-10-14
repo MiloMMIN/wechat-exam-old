@@ -1,0 +1,22 @@
+<navigation-bar title="接收题库" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view wx:if="{{loading}}" class="empty">读取中…</view>
+  <view wx:elif="{{err}}" class="empty">
+    <view>{{err}}</view>
+    <button class="pick" bindtap="pickFile">从聊天记录选 .kbz 文件</button>
+  </view>
+  <block wx:elif="{{bank}}">
+    <view class="hd">
+      <view class="hd-title">{{bank.name}}</view>
+      <view class="hd-sub">{{bank.questions.length}} 题 · {{bank.origin === 'shared' ? '朋友分享' : '导入'}}</view>
+    </view>
+    <view class="sec">
+      <view class="sec-title">考试设置（随题库携带）</view>
+      <view class="sec-body">{{bank.exam.count}} 题 × {{bank.exam.scorePerQuestion}} 分 · {{bank.exam.minutes}} 分钟 · 及格 {{bank.exam.passScore}} 分</view>
+    </view>
+    <view class="sec" wx:if="{{already}}">
+      <view class="sec-body warn">已存在同 id 题库，再次收藏将覆盖更新。</view>
+    </view>
+    <button class="btn primary" bindtap="collect">{{already ? '更新题库' : '收藏到我的题库'}}</button>
+  </block>
+</view>

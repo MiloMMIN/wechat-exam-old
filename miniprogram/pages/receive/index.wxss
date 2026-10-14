@@ -1,0 +1,10 @@
+.empty { text-align:center; color:#999; padding:120rpx 40rpx; font-size:28rpx; }
+.pick { margin-top:30rpx; background:#07c160; color:#fff; }
+.hd { background:#fff; border-radius:16rpx; padding:32rpx; margin-bottom:20rpx; }
+.hd-title { font-size:36rpx; font-weight:700; }
+.hd-sub { font-size:24rpx; color:#999; margin-top:8rpx; }
+.sec { background:#fff; border-radius:16rpx; padding:24rpx 28rpx; margin-bottom:20rpx; }
+.sec-title { font-size:26rpx; color:#999; margin-bottom:14rpx; }
+.sec-body { font-size:30rpx; color:#222; }
+.sec-body.warn { color:#fa5151; font-size:26rpx; }
+.btn { background:#07c160; color:#fff; }

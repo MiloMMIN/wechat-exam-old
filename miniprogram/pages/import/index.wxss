@@ -1,0 +1,21 @@
+.tip { font-size:24rpx; color:#999; padding:8rpx 4rpx 20rpx; }
+.field { background:#fff; border-radius:14rpx; padding:24rpx; margin-bottom:20rpx; }
+.label { font-size:28rpx; color:#555; font-weight:600; display:block; margin-bottom:14rpx; }
+.label-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14rpx; }
+.mini { font-size:24rpx; color:#07c160; padding:6rpx 16rpx; border:1rpx solid #07c160; border-radius:24rpx; }
+.inp { background:#f5f6f8; border-radius:8rpx; padding:14rpx 20rpx; font-size:30rpx; }
+.ta { width:100%; min-height:300rpx; background:#f5f6f8; border-radius:8rpx; padding:20rpx; font-size:28rpx; box-sizing:border-box; }
+.row-btns { display:flex; gap:20rpx; margin-bottom:20rpx; }
+.btn { flex:1; font-size:30rpx; }
+.btn.secondary { background:#f0f1f3; color:#333; }
+.btn.primary { background:#07c160; color:#fff; }
+.warn-box { background:#fff7e6; border-radius:12rpx; padding:20rpx; margin-bottom:20rpx; }
+.warn-line { font-size:24rpx; color:#ad6800; padding:4rpx 0; }
+.preview { background:#fff; border-radius:12rpx; padding:24rpx; }
+.pv-title { font-size:26rpx; color:#999; margin-bottom:16rpx; }
+.pv-item { padding:16rpx 0; border-bottom:1rpx solid #f0f0f0; }
+.pv-item:last-child { border-bottom:none; }
+.pv-q { font-size:28rpx; color:#222; margin-bottom:8rpx; }
+.pv-o { font-size:24rpx; color:#666; margin-bottom:6rpx; }
+.pv-a { font-size:24rpx; color:#07c160; }
+.ai-note { margin-top:20rpx; padding:20rpx; background:#e7f5ff; border-radius:12rpx; font-size:24rpx; color:#1971c2; }

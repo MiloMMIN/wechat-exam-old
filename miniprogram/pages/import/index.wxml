@@ -1,0 +1,44 @@
+<navigation-bar title="自定义题库" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="tip">粘贴格式化文本，或先用 AI 导题（接口预留）。</view>
+
+  <view class="field">
+    <text class="label">题库名</text>
+    <input class="inp" placeholder="例如：期末复习" value="{{name}}" bindinput="onName" />
+  </view>
+
+  <view class="field">
+    <view class="label-row">
+      <text class="label">题目文本</text>
+      <view class="mini" bindtap="pasteFromClipboard">从剪贴板粘贴</view>
+    </view>
+    <textarea
+      class="ta"
+      placeholder="题干...\nA. 选项\nB. 选项\nC. 选项\nD. 选项\n答案：B\n\n（空行分隔多题）"
+      value="{{raw}}"
+      bindinput="onRaw"
+      auto-height
+      maxlength="-1"
+    />
+  </view>
+
+  <view class="row-btns">
+    <button class="btn secondary" bindtap="doParse" disabled="{{parsing}}">{{parsing ? '解析中…' : '解析预览'}}</button>
+    <button class="btn primary" bindtap="doImport" disabled="{{!parsedCount}}">导入（{{parsedCount}} 题）</button>
+  </view>
+
+  <view wx:if="{{warnings.length}}" class="warn-box">
+    <view wx:for="{{warnings}}" wx:key="*this" class="warn-line">⚠ {{item}}</view>
+  </view>
+
+  <view wx:if="{{preview.length}}" class="preview">
+    <view class="pv-title">预览（前 {{preview.length}} 题 / 共 {{parsedCount}}）</view>
+    <view wx:for="{{preview}}" wx:key="index" class="pv-item">
+      <view class="pv-q">{{item.q}}</view>
+      <view class="pv-o">{{item.opts}}</view>
+      <view class="pv-a">答案：{{item.a}}</view>
+    </view>
+  </view>
+
+  <view class="ai-note" wx:if="{{!aiEnabled}}">AI 导题接口已预留（parseWithAI），接入后端后即可识别任意格式文本。</view>
+</view>

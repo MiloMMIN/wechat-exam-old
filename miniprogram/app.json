@@ -3,12 +3,33 @@
     "pages/index/index",
     "pages/learn/index",
     "pages/exam/index",
+    "pages/exam-settings/index",
     "pages/result/index",
-    "pages/mistake/index"
+    "pages/mistake/index",
+    "pages/favorite/index",
+    "pages/cull/index",
+    "pages/notes/index",
+    "pages/docs/index",
+    "pages/mine/index",
+    "pages/import/index",
+    "pages/bank-detail/index",
+    "pages/receive/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "题库" },
+      { "pagePath": "pages/docs/index", "text": "文档" },
+      { "pagePath": "pages/import/index", "text": " " },
+      { "pagePath": "pages/mine/index", "text": "我的" }
+    ]
   },
   "requiredPrivateInfos": [],
   "style": "v2",

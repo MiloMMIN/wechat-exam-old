@@ -1,0 +1,25 @@
+<navigation-bar title="题库详情" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container" wx:if="{{bank}}">
+  <view class="hd">
+    <view class="hd-title">{{bank.name}}</view>
+    <view class="hd-sub">{{bank.questions.length}} 题 · {{bank.origin === 'builtin' ? '内置' : bank.origin === 'imported' ? '本地导入' : '朋友分享'}}</view>
+  </view>
+
+  <view class="sec">
+    <view class="sec-title">默认考试设置</view>
+    <view class="sec-body">{{examSummary}}</view>
+  </view>
+
+  <view class="sec">
+    <view class="sec-title">题目预览（前 5）</view>
+    <view wx:for="{{preview}}" wx:key="index" class="pv">
+      <view class="pv-q">{{item.q}}</view>
+      <view class="pv-o">{{item.opts}}</view>
+    </view>
+  </view>
+
+  <view class="btn-col">
+    <button class="btn primary" bindtap="exportFile">导出 .kbz 分享文件</button>
+    <button class="btn" wx:if="{{!isBuiltin}}" bindtap="deleteBank">删除题库</button>
+  </view>
+</view>

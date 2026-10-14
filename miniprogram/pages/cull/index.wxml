@@ -1,0 +1,12 @@
+<navigation-bar title="斩题" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view wx:if="{{emptyText}}" class="empty">{{emptyText}}</view>
+  <block wx:else>
+    <view class="tip">斩题不再出现在"顺序/随机"练习中，可随时恢复。</view>
+    <view wx:for="{{culled}}" wx:key="id" class="cull-item">
+      <view class="cull-q">{{item.id}}. {{item.q}}</view>
+      <view class="cull-restore" data-id="{{item.id}}" bindtap="restore">恢复</view>
+    </view>
+    <button class="clear-btn" bindtap="clearAll">全部恢复</button>
+  </block>
+</view>

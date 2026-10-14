@@ -1,0 +1,29 @@
+.head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20rpx; }
+.head-title { font-size:36rpx; font-weight:700; color:#222; }
+.head-sub { font-size:24rpx; color:#999; margin-top:6rpx; }
+.head-reset { font-size:26rpx; color:#07c160; padding-top:8rpx; }
+
+.table { background:#fff; border-radius:16rpx; overflow:hidden; margin-bottom:20rpx; }
+.trow { display:flex; align-items:center; padding:24rpx 20rpx; border-bottom:1rpx solid #f0f0f0; }
+.trow.thead { background:#f7f8fa; font-size:26rpx; color:#666; }
+.trow.tfoot { border-bottom:none; }
+.tc { flex:1; font-size:28rpx; color:#333; text-align:center; }
+.tc.type { flex:1.6; text-align:left; }
+.tc.score { color:#07c160; font-weight:600; }
+.tin { background:#f5f6f8; border-radius:8rpx; padding:8rpx 12rpx; font-size:30rpx; display:inline-block; min-width:120rpx; text-align:center; }
+
+.list { background:#fff; border-radius:16rpx; margin-bottom:20rpx; }
+.row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:28rpx 24rpx; border-bottom:1rpx solid #f0f0f0;
+}
+.row:last-child { border-bottom:none; }
+.row-label { font-size:30rpx; color:#222; }
+.row-hint { font-size:22rpx; color:#999; margin-top:6rpx; }
+.row-ctl { display:flex; align-items:center; gap:12rpx; }
+.rin { background:#f5f6f8; border-radius:8rpx; padding:6rpx 16rpx; font-size:30rpx; min-width:120rpx; text-align:center; }
+.row-unit { font-size:26rpx; color:#666; }
+
+.bottom { display:flex; align-items:center; gap:20rpx; }
+.hist { font-size:24rpx; color:#999; flex-shrink:0; }
+.start { flex:1; background:#07c160; color:#fff; font-size:32rpx; font-weight:600; }

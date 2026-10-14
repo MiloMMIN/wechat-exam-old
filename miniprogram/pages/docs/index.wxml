@@ -1,0 +1,22 @@
+<navigation-bar title="文档" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="search-bar">
+    <text class="search-icon">🔍</text>
+    <input class="search-input" placeholder="搜索题库文档" value="{{searchKey}}" bindinput="onSearch" />
+  </view>
+
+  <view class="doc-list">
+    <view wx:for="{{filtered}}" wx:key="id" class="doc-item" data-id="{{item.id}}" bindtap="openDoc">
+      <view class="doc-icon {{item.origin}}">
+        <text wx:if="{{item.origin === 'builtin'}}">W</text>
+        <text wx:else>K</text>
+      </view>
+      <view class="doc-body">
+        <view class="doc-name">{{item.name}}</view>
+        <view class="doc-meta">{{item.meta}} · {{item.size}}B</view>
+      </view>
+      <text class="doc-arrow">›</text>
+    </view>
+    <view wx:if="{{!filtered.length}}" class="empty">无匹配文档</view>
+  </view>
+</view>

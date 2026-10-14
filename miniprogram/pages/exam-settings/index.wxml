@@ -1,0 +1,61 @@
+<navigation-bar title="考试设置" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view class="head">
+    <view>
+      <view class="head-title">{{bankName}}</view>
+      <view class="head-sub">题库共 {{total}} 题</view>
+    </view>
+    <view class="head-reset" bindtap="resetDefault">↻ 恢复默认</view>
+  </view>
+
+  <view class="table">
+    <view class="trow thead">
+      <text class="tc type">题型</text>
+      <text class="tc">题数</text>
+      <text class="tc">分值</text>
+    </view>
+    <view class="trow">
+      <text class="tc type">单选题（{{total}}）</text>
+      <view class="tc"><input class="tin" type="digit" value="{{count}}" bindinput="onCount" /></view>
+      <view class="tc"><input class="tin" type="digit" value="{{scorePer}}" bindinput="onScorePer" /></view>
+    </view>
+    <view class="trow tfoot">
+      <text class="tc">总题 {{count}} 题</text>
+      <text class="tc"></text>
+      <text class="tc score">共 {{totalScore}} 分</text>
+    </view>
+  </view>
+
+  <view class="list">
+    <view class="row">
+      <text class="row-label">考试时长</text>
+      <view class="row-ctl">
+        <input class="rin" type="number" value="{{minutes}}" bindinput="onMinutes" />
+        <text class="row-unit">分钟</text>
+      </view>
+    </view>
+    <view class="row">
+      <text class="row-label">及格分</text>
+      <view class="row-ctl">
+        <input class="rin" type="digit" value="{{passScore}}" bindinput="onPassScore" />
+        <text class="row-unit">分</text>
+      </view>
+    </view>
+    <view class="row">
+      <text class="row-label">交卷后显示答案</text>
+      <switch checked="{{showAnswerAfterSubmit}}" bindchange="onShowAnswer" color="#07c160" />
+    </view>
+    <view class="row">
+      <view>
+        <text class="row-label">选项乱序</text>
+        <view class="row-hint">选项随机排列，避免背答案</view>
+      </view>
+      <switch checked="{{shuffleOptions}}" bindchange="onShuffleOpts" color="#07c160" />
+    </view>
+  </view>
+
+  <view class="bottom">
+    <view class="hist" wx:if="{{lastExam}}">上次 {{lastExam.score}} 分 / {{lastExam.total}} 题</view>
+    <button class="start" bindtap="startExam">开始考试</button>
+  </view>
+</view>

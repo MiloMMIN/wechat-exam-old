@@ -1,66 +1,87 @@
-// pages/index/index.ts
-import { questions } from '../../data/questions'
-import { mistakeStore, favoriteStore, learnProgress, getDoneMap, getExamHistory } from '../../utils/store'
-
-const EXAM_COUNT = 40
-const EXAM_MINUTES = 60
+// pages/index/index.ts —— 题库主页（参考考试宝布局）
+import { getActiveBank, setActiveBank, listBanks, BUILTIN_ID } from '../../utils/bank-store'
+import { mistakeStore, favoriteStore, cullStore, learnProgress, getDoneMap, getExamHistory, getNotes } from '../../utils/store'
+import { practicePool } from '../../utils/quiz'
 
 Page({
   data: {
-    total: questions.length,
+    bankName: '',
+    bankId: BUILTIN_ID,
+    bankList: [] as { id: string; name: string }[],
+    bankIdx: 0,
+    total: 0,
     doneCount: 0,
     mistakeCount: 0,
     favCount: 0,
-    learnIndex: 0,
+    cullCount: 0,
+    noteCount: 0,
+    learnCursor: 0,
     lastExam: null as null | { score: number; total: number; at: number },
-    examCount: EXAM_COUNT,
-    examMinutes: EXAM_MINUTES,
   },
 
   onShow() {
-    const history = getExamHistory()
-    const cur = Math.min(learnProgress.cursor, questions.length - 1)
+    const tab = this.getTabBar?.()
+    tab?.setData({ selected: 0 })
+
+    const bank = getActiveBank()
+    const banks = listBanks()
+    const cursor = Math.min(learnProgress.cursor(bank.id), Math.max(bank.questions.length - 1, 0))
+    const pool = practicePool(bank.id, bank.questions)
+    const history = getExamHistory().filter(r => r.bankId === bank.id)
     this.setData({
-      doneCount: Object.keys(getDoneMap()).length,
-      mistakeCount: mistakeStore.ids().length,
-      favCount: favoriteStore.ids().length,
-      learnIndex: cur,
+      bankId: bank.id,
+      bankName: bank.name,
+      bankList: banks.map(b => ({ id: b.id, name: b.name })),
+      bankIdx: Math.max(0, banks.findIndex(b => b.id === bank.id)),
+      total: bank.questions.length,
+      doneCount: Object.keys(getDoneMap(bank.id)).length,
+      mistakeCount: mistakeStore.ids(bank.id).length,
+      favCount: favoriteStore.ids(bank.id).length,
+      cullCount: cullStore.ids(bank.id).length,
+      noteCount: getNotes(bank.id).length,
+      learnCursor: cursor,
       lastExam: history[0] || null,
     })
+    // 进度：实际剩余可刷题数
+    this.setData({ total: pool.length })
   },
 
-
+  onBankChange(e: WechatMiniprogram.PickerChange) {
+    const idx = Number(e.detail.value)
+    const bank = this.data.bankList[idx]
+    if (!bank) return
+    setActiveBank(bank.id)
+    this.onShow()
+  },
 
   goLearn() {
-    wx.navigateTo({ url: '../learn/index' })
+    wx.navigateTo({ url: '../learn/index?mode=seq' })
   },
-  goLearnRandom() {
+  goRandom() {
     wx.navigateTo({ url: '../learn/index?mode=random' })
   },
-  goFavorite() {
-    wx.navigateTo({ url: '../learn/index?mode=fav' })
+  goType() {
+    wx.navigateTo({ url: '../learn/index?mode=type' })
   },
-  goMistake() {
-    if (this.data.mistakeCount === 0) {
-      wx.showToast({ title: '暂无错题', icon: 'none' })
-      return
-    }
-    wx.navigateTo({ url: '../mistake/index' })
+  goChapter() {
+    wx.navigateTo({ url: '../learn/index?mode=chapter' })
   },
   goExam() {
-    wx.navigateTo({ url: `../exam/index?count=${EXAM_COUNT}&minutes=${EXAM_MINUTES}` })
+    wx.navigateTo({ url: '../exam-settings/index' })
   },
-  resetProgress() {
-    wx.showModal({
-      title: '清空数据',
-      content: '将清空学习进度、作答统计、错题本与收藏，确定？',
-      success: (res) => {
-        if (!res.confirm) return
-        const keys = ['mistake_ids', 'favorite_ids', 'learn_cursor', 'done_map', 'exam_history', 'exam_draft']
-        keys.forEach(k => wx.removeStorageSync(k))
-        this.onShow()
-        wx.showToast({ title: '已清空', icon: 'success' })
-      },
-    })
+  goMistake() {
+    wx.navigateTo({ url: '../mistake/index' })
+  },
+  goFavorite() {
+    wx.navigateTo({ url: '../favorite/index' })
+  },
+  goCull() {
+    wx.navigateTo({ url: '../cull/index' })
+  },
+  goNotes() {
+    wx.navigateTo({ url: '../notes/index' })
+  },
+  goBankDetail() {
+    wx.navigateTo({ url: `../bank-detail/index?id=${this.data.bankId}` })
   },
 })

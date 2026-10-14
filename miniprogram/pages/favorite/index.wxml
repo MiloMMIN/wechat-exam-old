@@ -1,0 +1,24 @@
+<navigation-bar title="收藏夹" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <view wx:if="{{emptyText}}" class="empty">{{emptyText}}</view>
+  <block wx:elif="{{q}}">
+    <view class="q-card">
+      <view class="q-meta"><text>第 {{cursor + 1}} / {{poolSize}} 题 · 原题号 {{q.id}}</text></view>
+      <view class="q-stem">{{q.q}}</view>
+      <block wx:for="{{opts}}" wx:key="letter">
+        <view class="opt {{item.state}}" data-idx="{{index}}" bindtap="choose">
+          <text class="opt-label">{{item.letter}}.</text>
+          <text class="opt-text">{{item.text}}</text>
+        </view>
+      </block>
+      <view wx:if="{{answered}}" class="verdict">正确答案：{{opts[q.a].letter}} · {{opts[q.a].text}}</view>
+    </view>
+    <view class="tool-row">
+      <view class="tool" bindtap="unfav"><text class="tool-text">取消收藏</text></view>
+    </view>
+    <view class="footer-bar">
+      <button bindtap="prev" disabled="{{cursor === 0}}">上一题</button>
+      <button type="primary" bindtap="next">{{answered ? '下一题' : '跳过'}}</button>
+    </view>
+  </block>
+</view>

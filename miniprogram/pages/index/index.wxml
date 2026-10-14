@@ -1,63 +1,64 @@
-<navigation-bar title="电子商务师刷题" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="题库" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="container home">
 
-  <view class="stat-card">
-    <view class="stat-row">
-      <view class="stat-item">
-        <view class="stat-num">{{doneCount}}</view>
-        <view class="stat-label">已刷</view>
-      </view>
-      <view class="stat-item">
-        <view class="stat-num">{{total}}</view>
-        <view class="stat-label">总题数</view>
-      </view>
-      <view class="stat-item">
-        <view class="stat-num warn">{{mistakeCount}}</view>
-        <view class="stat-label">错题</view>
-      </view>
-      <view class="stat-item">
-        <view class="stat-num accent">{{favCount}}</view>
-        <view class="stat-label">收藏</view>
-      </view>
+  <!-- 题库切换 -->
+  <picker range="{{bankList}}" range-key="name" value="{{bankIdx}}" bindchange="onBankChange">
+    <view class="bank-switch">
+      <text class="bank-name">{{bankName}}</text>
+      <text class="bank-meta">{{total}} 题 · 点击切换题库 ›</text>
     </view>
-    <view class="progress-track">
-      <view class="progress-fill" style="width: {{total ? doneCount / total * 100 : 0}}%"></view>
+  </picker>
+
+  <!-- 4 快捷入口：错题/收藏/斩题/笔记 -->
+  <view class="quick-row">
+    <view class="quick-item" bindtap="goMistake">
+      <view class="quick-circle red"><text>✕</text></view>
+      <text class="quick-text">错题 {{mistakeCount}}</text>
     </view>
-    <view class="stat-tip">学习进度：第 {{learnIndex + 1}} 题 / {{total}} 题</view>
+    <view class="quick-item" bindtap="goFavorite">
+      <view class="quick-circle amber"><text>★</text></view>
+      <text class="quick-text">收藏 {{favCount}}</text>
+    </view>
+    <view class="quick-item" bindtap="goCull">
+      <view class="quick-circle cyan"><text>✓</text></view>
+      <text class="quick-text">斩题 {{cullCount}}</text>
+    </view>
+    <view class="quick-item" bindtap="goNotes">
+      <view class="quick-circle purple"><text>✎</text></view>
+      <text class="quick-text">笔记 {{noteCount}}</text>
+    </view>
   </view>
 
-  <view class="menu">
-    <button class="menu-btn primary" bindtap="goLearn">
-      <text class="menu-title">顺序学习</text>
-      <text class="menu-sub">从第 {{learnIndex + 1}} 题继续，作答即判对错</text>
-    </button>
-    <button class="menu-btn" bindtap="goLearnRandom">
-      <text class="menu-title">随机练习</text>
-      <text class="menu-sub">打乱顺序刷全库</text>
-    </button>
-    <button class="menu-btn" bindtap="goFavorite">
-      <text class="menu-title">收藏夹</text>
-      <text class="menu-sub">只看收藏过的题</text>
-    </button>
-    <button class="menu-btn warn-btn" bindtap="goMistake">
-      <text class="menu-title">错题本</text>
-      <text class="menu-sub">{{mistakeCount}} 道错题，答对可移出</text>
-    </button>
-
-    <view class="exam-box">
-      <view class="exam-title">模拟考试</view>
-      <view class="exam-form">
-        <view class="exam-field">40 题 · 60 分钟 · 到时自动交卷</view>
-      </view>
-      <button class="menu-btn primary" bindtap="goExam">
-        <text class="menu-title">开始考试</text>
-        <text class="menu-sub" wx:if="{{lastExam}}">上次：{{lastExam.score}} 分（{{lastExam.total}} 题）</text>
-        <text class="menu-sub" wx:else>随机抽 40 题，60 分钟到时自动交卷</text>
-      </button>
+  <!-- 题库练习 2 列卡 -->
+  <view class="section-title">题库练习</view>
+  <view class="grid">
+    <view class="g-card g-green" bindtap="goLearn">
+      <view class="g-title">顺序练习</view>
+      <view class="g-sub">{{learnCursor}}/{{total}}</view>
     </view>
+    <view class="g-card g-blue" bindtap="goRandom">
+      <view class="g-title">随机练习</view>
+      <view class="g-sub">打乱顺序</view>
+    </view>
+    <view class="g-card g-orange" bindtap="goExam">
+      <view class="g-title">模拟考试</view>
+      <view class="g-sub" wx:if="{{lastExam}}">上次 {{lastExam.score}} 分</view>
+      <view class="g-sub" wx:else>仿真模拟</view>
+    </view>
+    <view class="g-card g-cyan" bindtap="goType">
+      <view class="g-title">题型练习</view>
+      <view class="g-sub">按选项数分类</view>
+    </view>
+    <view class="g-card g-purple" bindtap="goChapter">
+      <view class="g-title">章节练习</view>
+      <view class="g-sub">按题号分段</view>
+    </view>
+  </view>
 
-    <button class="menu-btn ghost" bindtap="resetProgress">
-      <text class="menu-title">清空全部数据</text>
-    </button>
+  <!-- 功能推荐 -->
+  <view class="section-title">功能</view>
+  <view class="feat-row">
+    <view class="feat" bindtap="goBankDetail"><text class="feat-icon">📤</text><text class="feat-text">分享题库</text></view>
+    <view class="feat" bindtap="goBankDetail"><text class="feat-icon">📋</text><text class="feat-text">题库详情</text></view>
   </view>
 </view>

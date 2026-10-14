@@ -2,11 +2,24 @@
 <view class="container">
   <view wx:if="{{emptyText}}" class="empty">{{emptyText}}</view>
 
+  <!-- 分段选择（题型/章节模式入口） -->
+  <view wx:elif="{{segIdx === -1 && segments.length}}" class="seg-list">
+    <view
+      wx:for="{{segments}}" wx:key="label"
+      class="seg-item" data-i="{{index}}" bindtap="pickSeg">
+      <text>{{item.label}}</text>
+      <text class="seg-arrow">›</text>
+    </view>
+  </view>
+
   <block wx:elif="{{q}}">
+    <view wx:if="{{segments.length}}" class="back-row" bindtap="backToSegs">
+      ‹ 返回{{mode === 'type' ? '题型' : '章节'}}列表
+    </view>
     <view class="q-card">
       <view class="q-meta">
         <text>第 {{cursor + 1}} / {{poolSize}} 题 · 原题号 {{q.id}}</text>
-        <text>{{doneInSession}} 题已答 · 对 {{rightCount}}</text>
+        <text>{{doneInSession}} 已答 · 对 {{rightCount}}</text>
       </view>
       <view class="q-stem">{{q.q}}</view>
 
@@ -17,24 +30,21 @@
         </view>
       </block>
 
-      <view wx:if="{{answered}}" class="verdict {{opts[q.a] ? '' : ''}}">
+      <view wx:if="{{answered}}" class="verdict">
         正确答案：{{opts[q.a].letter}} · {{opts[q.a].text}}
       </view>
     </view>
 
     <view class="tool-row">
-      <view class="tool" bindtap="toggleFav">
-        <text class="tool-icon">{{isFav ? '★' : '☆'}}</text>
-        <text class="tool-text">{{isFav ? '已收藏' : '收藏'}}</text>
-      </view>
-      <view class="tool" bindtap="toggleMistake">
-        <text class="tool-icon">{{isMistake ? '✕' : '＋'}}</text>
-        <text class="tool-text">{{isMistake ? '移出错题本' : '加入错题本'}}</text>
-      </view>
-      <view class="tool jump">
-        <text class="tool-text">跳转</text>
-        <input class="jump-input" type="number" placeholder="题号" confirm-type="go" bindconfirm="jumpTo" />
-      </view>
+      <view class="tool" bindtap="toggleFav"><text class="tool-text">{{isFav ? '★ 已收藏' : '☆ 收藏'}}</text></view>
+      <view class="tool" bindtap="toggleMistake"><text class="tool-text">{{isMistake ? '移出错题' : '＋错题'}}</text></view>
+      <view class="tool" bindtap="toggleCull"><text class="tool-text">{{isCulled ? '取消斩题' : '✓ 斩题'}}</text></view>
+      <view class="tool" bindtap="showNote"><text class="tool-text">✎ 笔记</text></view>
+    </view>
+
+    <view wx:if="{{showNoteInput}}" class="note-box">
+      <textarea class="note-ta" placeholder="记一条笔记（本题）" value="{{noteDraft}}" bindinput="onNoteInput" auto-height maxlength="500" />
+      <button class="note-save" bindtap="saveNote">保存</button>
     </view>
 
     <view class="footer-bar">

@@ -2,7 +2,7 @@
 <view class="container result">
   <view class="score-card">
     <view class="score-num {{pass ? 'pass' : 'fail'}}">{{score}}</view>
-    <view class="score-label">{{pass ? '合格' : '不合格'}}（60 分合格）</view>
+    <view class="score-label">{{pass ? '合格' : '不合格'}}</view>
     <view class="score-row">
       <view class="score-item">✔ {{right}} 题</view>
       <view class="score-item fail-text">✘ {{wrong}} 题</view>

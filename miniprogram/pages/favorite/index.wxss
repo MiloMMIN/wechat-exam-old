@@ -1,0 +1,6 @@
+.empty { text-align:center; color:#999; padding:120rpx 0; font-size:28rpx; }
+.verdict { margin-top:8rpx; padding:16rpx 20rpx; background:#f0fbf4; border-radius:8rpx; color:#07c160; font-size:26rpx; }
+.tool-row { display:flex; gap:14rpx; margin:0 4rpx 20rpx; }
+.tool { flex:1; display:flex; justify-content:center; background:#fff; border-radius:12rpx; padding:18rpx 0; }
+.tool-text { font-size:26rpx; color:#555; }
+.footer-bar button[disabled]{opacity:.4}
