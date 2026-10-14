@@ -13,6 +13,7 @@ Page({
     parsedCount: 0,
     aiEnabled: false, // 占位：未来后端就绪后开
     fileName: '',
+    expandText: false,
   },
 
   onShow() {
@@ -22,6 +23,7 @@ Page({
 
   onName(e: WechatMiniprogram.Input) { this.setData({ name: e.detail.value }) },
   onRaw(e: WechatMiniprogram.Input) { this.setData({ raw: e.detail.value }) },
+  toggleExpand() { this.setData({ expandText: !this.data.expandText }) },
 
   async doParse() {
     const text = this.data.raw.trim()
@@ -63,20 +65,29 @@ Page({
     wx.getClipboardData({ success: r => this.setData({ raw: r.data }) })
   },
 
-  // 上传 .txt/.md/.kbz（docx 需先转文本，小程序内不解析二进制）
+  // 上传文件：.txt/.md 文本 → 填 textarea；.kbz → 直接导入；.doc/.docx → 提示先转文本
   pickFile() {
     wx.chooseMessageFile({
       count: 1,
       type: 'file',
-      extension: ['txt', 'md', 'kbz'],
       success: res => {
         const file = res.tempFiles[0]
         if (!file) return
+        const name = file.name
+        // 二进制 Office 直接拦下
+        if (/\.(docx?|wps|rtf|pdf|xlsx?|pptx?)$/i.test(name)) {
+          wx.showModal({
+            title: '暂不支持 Office 文件',
+            content: '小程序读不了二进制。请把题目复制为文本粘贴进来，或先用桌面脚本转 .docx 再离线生成题库。',
+            showCancel: false,
+            confirmText: '知道了',
+          })
+          return
+        }
         const fs = wx.getFileSystemManager()
         try {
           const text = fs.readFileSync(file.path, 'utf8') as string
-          // .kbz 直接导入为 bank；.txt/.md 先填到 textarea 再解析
-          if (file.name.endsWith('.kbz')) {
+          if (name.endsWith('.kbz')) {
             const { decodeBank } = require('../../utils/bank-format')
             const bank = decodeBank(text)
             if (bank) {
@@ -86,7 +97,7 @@ Page({
               return
             }
           }
-          this.setData({ raw: text, fileName: file.name })
+          this.setData({ raw: text, fileName: name })
           wx.showToast({ title: '已读取文件，点解析', icon: 'none' })
         } catch (e) {
           wx.showToast({ title: '文件读取失败', icon: 'none' })

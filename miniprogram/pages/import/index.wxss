@@ -4,12 +4,13 @@
 .label-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14rpx; }
 .mini { font-size:24rpx; color:#07c160; padding:6rpx 16rpx; border:1rpx solid #07c160; border-radius:24rpx; }
 .inp { background:#f5f6f8; border-radius:8rpx; padding:14rpx 20rpx; font-size:30rpx; }
-.ta { width:100%; min-height:300rpx; background:#f5f6f8; border-radius:8rpx; padding:20rpx; font-size:28rpx; box-sizing:border-box; }
 .row-btns { display:flex; gap:20rpx; margin-bottom:20rpx; }
 .btn { flex:1; font-size:30rpx; }
 .btn.secondary { background:#f0f1f3; color:#333; }
 .btn.primary { background:#07c160; color:#fff; }
-.warn-box { background:#fff7e6; border-radius:12rpx; padding:20rpx; margin-bottom:20rpx; }
+.ta { width:100%; min-height:200rpx; max-height:400rpx; background:#f5f6f8; border-radius:8rpx; padding:20rpx; font-size:28rpx; box-sizing:border-box; }
+.ta-full { max-height:none; }
+.expand-toggle { text-align:center; font-size:24rpx; color:#07c160; padding:12rpx 0 4rpx; }
 .warn-line { font-size:24rpx; color:#ad6800; padding:4rpx 0; }
 .preview { background:#fff; border-radius:12rpx; padding:24rpx; }
 .pv-title { font-size:26rpx; color:#999; margin-bottom:16rpx; }

@@ -16,13 +16,17 @@
       </view>
     </view>
     <textarea
-      class="ta"
+      class="ta {{expandText ? 'ta-full' : ''}}"
       placeholder="766.题干...\nA、选项A\nB、选项B\nC、选项C\nD、选项D\n【参考答案】A\n\n767.下一题..."
       value="{{raw}}"
       bindinput="onRaw"
-      auto-height
+      auto-height="{{expandText}}"
       maxlength="-1"
+      show-confirm-bar="{{false}}"
     />
+    <view class="expand-toggle" bindtap="toggleExpand" wx:if="{{raw.length > 400}}">
+      {{expandText ? '收起 ▲' : '展开全部 ▼'}}
+    </view>
   </view>
 
   <view class="row-btns">
