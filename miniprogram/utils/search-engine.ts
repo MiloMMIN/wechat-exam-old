@@ -106,8 +106,8 @@ export function toFuzzyPinyin(s: string): string {
   return r
 }
 
-/** 智能将用户输入的拼音串切分为音节序列 (支持全拼、前缀拼音、首字母简拼) */
-export function segmentPinyin(str: string): string[] {
+/** 智能将用户输入的拼音串切分为所有合法的音节序列候选组合 (智能惩罚生僻零声母) */
+export function getPinyinCandidates(str: string): string[][] {
   const s = str.toLowerCase().replace(/[^a-z]/g, '')
   if (!s) return []
 
@@ -134,11 +134,17 @@ export function segmentPinyin(str: string): string[] {
 
   const all = dfs(0)
   if (all.length > 0) {
-    all.sort((a, b) => a.length - b.length)
-    return all[0]
+    // 排序：惩罚生僻独立零声母 eng, ng, hng, ei
+    all.sort((a, b) => {
+      const penaltyA = a.filter(p => p === 'eng' || p === 'ng' || p === 'hng').length
+      const penaltyB = b.filter(p => p === 'eng' || p === 'ng' || p === 'hng').length
+      if (penaltyA !== penaltyB) return penaltyA - penaltyB
+      return a.length - b.length
+    })
+    return all.slice(0, 3)
   }
 
-  // 若无法整除，尝试截断末尾前缀 (如 'wul' -> ['wu', 'l'])
+  // 若无法整除，尝试截断末尾前缀 (如 'wul' -> [['wu', 'l']])
   for (let prefixLen = s.length - 1; prefixLen >= 1; prefixLen--) {
     const head = s.slice(0, prefixLen)
     const tail = s.slice(prefixLen)
@@ -150,15 +156,21 @@ export function segmentPinyin(str: string): string[] {
       }
     }
     if (tailIsPrefix) {
-      const sub = segmentPinyin(head)
-      if (sub && sub.length) {
-        return [...sub, tail]
+      const subs = getPinyinCandidates(head)
+      if (subs && subs.length) {
+        return subs.map(sub => [...sub, tail])
       }
     }
   }
 
   // 兜底：按单字母序列处理 (首字母简拼模式)
-  return s.split('')
+  return [[...s.split('')]]
+}
+
+/** 单一最佳拼音切词 */
+export function segmentPinyin(str: string): string[] {
+  const cands = getPinyinCandidates(str)
+  return cands.length > 0 ? cands[0] : str.toLowerCase().replace(/[^a-z]/g, '').split('')
 }
 
 /** 单音节匹配评估 */
@@ -328,8 +340,19 @@ function evaluateQuestion(question: Question, rawQuery: string): SearchResult | 
   const pys = question.pys || ''
   const pyos = question.pyos || []
 
-  const queryPieces = isAlpha ? segmentPinyin(q) : []
-
+  // 获取拼音候选切词方案 + 纯首字母方案
+  const candidateLists: string[][] = []
+  if (isAlpha) {
+    const cands = getPinyinCandidates(q)
+    candidateLists.push(...cands)
+    // 若长度较短，将单字母序列也作为一个候选（首字母简拼，如 jn -> ['j', 'n']）
+    if (q.length <= 8) {
+      const letters = q.split('')
+      if (!candidateLists.some(c => c.length === letters.length && c.every((p, i) => p === letters[i]))) {
+        candidateLists.push(letters)
+      }
+    }
+  }
   // 1. 匹配题干
   let stemScore: MatchScore | null = null
   let stemType: 'normal' | 'pinyin' = 'normal'
@@ -344,9 +367,16 @@ function evaluateQuestion(question: Question, rawQuery: string): SearchResult | 
     if (stemScore) {
       stemType = 'normal'
     } else {
-      // 拼音音节引擎 (包含连续全拼、模糊拼音、全拼跨字、简拼首字母跨字)
-      stemScore = matchPinyinInSyllables(pys, queryPieces)
-      stemType = 'pinyin'
+      // 对所有候选方案进行尝试，取最优评分
+      for (const pieces of candidateLists) {
+        const score = matchPinyinInSyllables(pys, pieces)
+        if (score) {
+          if (!stemScore || score.matchedChars > stemScore.matchedChars || (score.matchedChars === stemScore.matchedChars && score.isContinuous && !stemScore.isContinuous)) {
+            stemScore = score
+            stemType = 'pinyin'
+          }
+        }
+      }
     }
   }
 
@@ -368,11 +398,17 @@ function evaluateQuestion(question: Question, rawQuery: string): SearchResult | 
       if (s) {
         t = 'normal'
       } else {
-        s = matchPinyinInSyllables(pyos[i], queryPieces)
-        t = 'pinyin'
+        for (const pieces of candidateLists) {
+          const score = matchPinyinInSyllables(pyos[i], pieces)
+          if (score) {
+            if (!s || score.matchedChars > s.matchedChars || (score.matchedChars === s.matchedChars && score.isContinuous && !s.isContinuous)) {
+              s = score
+              t = 'pinyin'
+            }
+          }
+        }
       }
     }
-
     if (s) {
       if (
         !bestOptScore ||
@@ -444,13 +480,13 @@ function evaluateQuestion(question: Question, rawQuery: string): SearchResult | 
 
 /** 排序比较器（严格遵循需求 3、4 以及模糊拼音降权） */
 export function compareSearchResults(a: SearchResult, b: SearchResult): number {
-  // 1. 按照字数匹配数降序
-  if (b.matchedChars !== a.matchedChars) {
-    return b.matchedChars - a.matchedChars
-  }
-  // 2. 连续紧凑匹配优先于跨字匹配 (需求 4)
+  // 1. 连续紧凑匹配优先于跨字匹配 (需求 4：连续完整优先)
   if (b.isContinuous !== a.isContinuous) {
     return (b.isContinuous ? 1 : 0) - (a.isContinuous ? 1 : 0)
+  }
+  // 2. 按照字数匹配数降序
+  if (b.matchedChars !== a.matchedChars) {
+    return b.matchedChars - a.matchedChars
   }
   // 3. 同为连续时，精确无模糊匹配优先于模糊音转换
   if (a.hasFuzzy !== b.hasFuzzy) {

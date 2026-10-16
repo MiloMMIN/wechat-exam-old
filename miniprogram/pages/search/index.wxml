@@ -25,7 +25,7 @@
     <picker range="{{bankList}}" range-key="name" value="{{bankIdx}}" bindchange="onBankChange">
       <view class="bank-picker">
         <text class="bank-label">当前题库：</text>
-        <text class="bank-name-text">{{bankName}} ({{totalBankQuestions}}题)</text>
+        <text class="bank-name-text">{{bankName}}</text>
         <text class="bank-arrow">▾</text>
       </view>
     </picker>

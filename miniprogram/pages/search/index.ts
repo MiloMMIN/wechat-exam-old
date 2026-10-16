@@ -1,6 +1,7 @@
 // pages/search/index.ts —— 智能搜题
 import { Question } from '../../data/questions'
-import { getActiveBank, listBanks, setActiveBank } from '../../utils/bank-store'
+import { questions as allQuestions } from '../../data/all-questions'
+import { listBanks } from '../../utils/bank-store'
 import { searchQuestions, SearchResult, HighlightSegment } from '../../utils/search-engine'
 import { favoriteStore, mistakeStore } from '../../utils/store'
 
@@ -45,6 +46,7 @@ Page({
 
   _timer: null as number | null,
   _pool: [] as Question[],
+  _searchBanks: [] as { id: string; name: string; questions: Question[] }[],
 
   onLoad() {
     this.initBank()
@@ -52,27 +54,38 @@ Page({
   },
 
   onShow() {
-    this.initBank()
+    // 保留当前选中的搜题题库，若未初始化则初始化
+    if (!this._searchBanks || this._searchBanks.length === 0) {
+      this.initBank()
+    }
   },
 
   initBank() {
-    const active = getActiveBank()
     const banks = listBanks()
-    this._pool = active.questions
-    const idx = Math.max(0, banks.findIndex(b => b.id === active.id))
+
+    // 搜题优先默认使用 1693 题完整题库，同时支持切换当前外部练习题库
+    const searchBanks = [
+      { id: 'full_all', name: `电子商务师完整题库 (${allQuestions.length}题)`, questions: allQuestions },
+      ...banks.map(b => ({ id: b.id, name: `${b.name} (${b.questions.length}题)`, questions: b.questions })),
+    ]
+
+    this._searchBanks = searchBanks
+    const currentIdx = Math.max(0, Math.min(this.data.bankIdx, searchBanks.length - 1))
+    const currentBank = searchBanks[currentIdx]
+    this._pool = currentBank.questions
+
     this.setData({
-      bankId: active.id,
-      bankName: active.name,
-      bankList: banks.map(b => ({ id: b.id, name: b.name })),
-      bankIdx: idx,
-      totalBankQuestions: active.questions.length,
+      bankId: currentBank.id,
+      bankName: currentBank.name,
+      bankList: searchBanks.map(b => ({ id: b.id, name: b.name })),
+      bankIdx: currentIdx,
+      totalBankQuestions: currentBank.questions.length,
     })
-    // 如果已经有搜索词，重新搜一次
+
     if (this.data.query.trim()) {
       this.doSearch(this.data.query.trim())
     }
   },
-
   loadHistory() {
     const list: string[] = wx.getStorageSync(KEY_HISTORY) || []
     this.setData({ historyList: list.slice(0, 10) })
@@ -94,10 +107,18 @@ Page({
 
   onBankChange(e: WechatMiniprogram.PickerChange) {
     const idx = Number(e.detail.value)
-    const bank = this.data.bankList[idx]
-    if (!bank) return
-    setActiveBank(bank.id)
-    this.initBank()
+    const selected = this._searchBanks[idx]
+    if (!selected) return
+    this._pool = selected.questions
+    this.setData({
+      bankIdx: idx,
+      bankId: selected.id,
+      bankName: selected.name,
+      totalBankQuestions: selected.questions.length,
+    })
+    if (this.data.query.trim()) {
+      this.doSearch(this.data.query.trim())
+    }
   },
 
   onInput(e: WechatMiniprogram.Input) {
