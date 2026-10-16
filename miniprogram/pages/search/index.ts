@@ -7,11 +7,18 @@ import { favoriteStore, mistakeStore } from '../../utils/store'
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 const KEY_HISTORY = 'quiz_search_history'
 
+interface OptViewItem {
+  letter: string
+  text: string
+  isCorrect: boolean
+  segments?: HighlightSegment[]
+}
+
 interface ViewItem {
   id: number
   qSegments: HighlightSegment[]
   rawStem: string
-  opts: { letter: string; text: string; isCorrect: boolean }[]
+  opts: OptViewItem[]
   answerLetter: string
   answerText: string
   matchTag: string
@@ -143,15 +150,17 @@ Page({
       const answerLetter = LETTERS[q.a] || 'A'
       const answerText = q.o[q.a] || ''
 
-      const opts = q.o.map((text, idx) => ({
+      const optSegsList = m.optSegmentsList
+      const opts: OptViewItem[] = q.o.map((text, idx) => ({
         letter: LETTERS[idx],
         text,
         isCorrect: idx === q.a,
+        segments: optSegsList ? optSegsList[idx] : [{ text, type: 'none' }],
       }))
 
       return {
         id: q.id,
-        qSegments: m.stemSegments || [{ text: q.q, highlight: false }],
+        qSegments: m.stemSegments || [{ text: q.q, type: 'none' }],
         rawStem: q.q,
         opts,
         answerLetter,

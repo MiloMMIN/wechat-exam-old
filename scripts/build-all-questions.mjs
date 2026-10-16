@@ -58,17 +58,27 @@ function cleanText(str) {
   return str.replace(/[   ​ 　]/g, '').replace(/\s+/g, ' ').replace(/（）/g, '（ ）').trim()
 }
 
+// 提取与字符串逐字一一对应的拼音音节空格分隔字符串
+function extractSyllablesString(text) {
+  const res = []
+  for (const ch of text) {
+    if (/[\u4e00-\u9fa5]/.test(ch)) {
+      try {
+        const py = pinyin(ch, { style: 'normal' })[0][0].toLowerCase()
+        res.push(py)
+      } catch (e) {
+        res.push(ch.toLowerCase())
+      }
+    } else {
+      res.push(ch === ' ' ? '_' : ch.toLowerCase())
+    }
+  }
+  return res.join(' ')
+}
+
 function getFirstLetter(str) {
   try {
     return pinyin(str, { style: 'first_letter' }).flat().join('').toLowerCase().replace(/[^a-z0-9]/g, '')
-  } catch (e) {
-    return ''
-  }
-}
-
-function getFullPinyin(str) {
-  try {
-    return pinyin(str, { style: 'normal' }).flat().join('').toLowerCase().replace(/[^a-z0-9]/g, '')
   } catch (e) {
     return ''
   }
@@ -100,9 +110,8 @@ for (const block of blocks) {
       o: opts,
       a,
       pyq: getFirstLetter(stem),
-      pyqFull: getFullPinyin(stem),
-      pyo: opts.map(getFirstLetter),
-      pyoFull: opts.map(getFullPinyin),
+      pys: extractSyllablesString(stem),
+      pyos: opts.map(extractSyllablesString),
     })
   } else {
     // 单选题
@@ -137,9 +146,8 @@ for (const block of blocks) {
       o,
       a,
       pyq: getFirstLetter(stem),
-      pyqFull: getFullPinyin(stem),
-      pyo: o.map(getFirstLetter),
-      pyoFull: o.map(getFullPinyin),
+      pys: extractSyllablesString(stem),
+      pyos: o.map(extractSyllablesString),
     })
   }
 }
@@ -159,12 +167,10 @@ export interface Question {
   a: number
   /** 题干拼音首字母 */
   pyq?: string
-  /** 题干全拼 */
-  pyqFull?: string
-  /** 选项拼音首字母 */
-  pyo?: string[]
-  /** 选项全拼 */
-  pyoFull?: string[]
+  /** 题干逐字音节 (空格分隔，长度与 q 一一对应) */
+  pys?: string
+  /** 选项逐字音节 (空格分隔，长度与 o 元素一一对应) */
+  pyos?: string[]
 }
 
 export const questions: Question[] = ${JSON.stringify(questions, null, 0)}

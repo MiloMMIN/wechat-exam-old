@@ -70,7 +70,7 @@
           <text class="meta-type">{{item.opts.length === 2 ? '判断题' : '单选题'}}</text>
         </view>
         <view class="meta-right">
-          <text class="match-tag tag-{{item.matchTag === '拼音命中' ? 'purple' : item.matchTag === '题干跨字' ? 'orange' : 'green'}}">
+          <text class="match-tag tag-{{item.matchTag.indexOf('拼音') >= 0 ? 'pinyin' : item.matchTag.indexOf('跨字') >= 0 ? 'subseq' : 'normal'}}">
             {{item.matchTag}}
           </text>
         </view>
@@ -79,7 +79,7 @@
       <!-- 题干 (高亮匹配字) -->
       <view class="q-stem">
         <block wx:for="{{item.qSegments}}" wx:for-item="seg" wx:key="index">
-          <text class="{{seg.highlight ? 'hl-text' : ''}}">{{seg.text}}</text>
+          <text class="seg-{{seg.type}}">{{seg.text}}</text>
         </block>
       </view>
 
@@ -93,7 +93,11 @@
           class="opt {{item.showAnswer && opt.isCorrect ? 'correct' : ''}} {{item.optHitIdx === optIdx ? 'opt-hit' : ''}}"
         >
           <text class="opt-label">{{opt.letter}}.</text>
-          <text class="opt-text">{{opt.text}}</text>
+          <view class="opt-text">
+            <block wx:for="{{opt.segments}}" wx:for-item="optSeg" wx:key="index">
+              <text class="seg-{{optSeg.type}}">{{optSeg.text}}</text>
+            </block>
+          </view>
           <text class="opt-mark" wx:if="{{item.showAnswer && opt.isCorrect}}">✓ 正确答案</text>
         </view>
       </view>
