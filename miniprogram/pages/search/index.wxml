@@ -1,0 +1,128 @@
+<navigation-bar title="智能搜题" back="{{true}}" homeButton="{{true}}" color="black" background="#FFF"></navigation-bar>
+
+<view class="search-page">
+  <!-- 顶部固定搜索区域 -->
+  <view class="search-bar-wrap">
+    <view class="search-input-box">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜题干/选项/拼音 (如: 物流、wl、高冷)"
+        value="{{query}}"
+        confirm-type="search"
+        focus="{{true}}"
+        bindinput="onInput"
+        bindconfirm="onConfirm"
+      />
+      <view class="clear-btn" wx:if="{{query.length > 0}}" bindtap="onClear">✕</view>
+    </view>
+    <view class="confirm-btn" bindtap="onConfirm">搜索</view>
+  </view>
+
+  <!-- 题库与视图控制栏 -->
+  <view class="bank-bar">
+    <picker range="{{bankList}}" range-key="name" value="{{bankIdx}}" bindchange="onBankChange">
+      <view class="bank-picker">
+        <text class="bank-label">当前题库：</text>
+        <text class="bank-name-text">{{bankName}} ({{totalBankQuestions}}题)</text>
+        <text class="bank-arrow">▾</text>
+      </view>
+    </picker>
+    <view class="ans-toggle-btn" bindtap="toggleShowAll">
+      <text>{{showAllAnswers ? '隐藏答案' : '显示答案'}}</text>
+    </view>
+  </view>
+
+  <!-- 搜索历史 (当输入为空时展示) -->
+  <view class="history-card" wx:if="{{!query && historyList.length > 0}}">
+    <view class="history-head">
+      <text class="history-title">最近搜索</text>
+      <text class="history-clear" bindtap="clearHistory">清空</text>
+    </view>
+    <view class="history-tags">
+      <view
+        wx:for="{{historyList}}"
+        wx:key="*this"
+        class="history-tag"
+        data-word="{{item}}"
+        bindtap="onTapHistory"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 结果列表 -->
+  <view class="result-container" wx:if="{{query.length > 0}}">
+    <!-- 统计行 -->
+    <view class="result-summary" wx:if="{{searched}}">
+      <text wx:if="{{results.length > 0}}">找到 {{results.length}} 道匹配题目（按匹配度排序）</text>
+      <text wx:else>未搜到匹配题目</text>
+    </view>
+
+    <!-- 题目卡片列表 -->
+    <view wx:for="{{results}}" wx:key="id" class="q-card search-card">
+      <!-- 题头 -->
+      <view class="q-meta">
+        <view class="meta-left">
+          <text class="meta-no">#{{item.id}}</text>
+          <text class="meta-type">{{item.opts.length === 2 ? '判断题' : '单选题'}}</text>
+        </view>
+        <view class="meta-right">
+          <text class="match-tag tag-{{item.matchTag === '拼音命中' ? 'purple' : item.matchTag === '题干跨字' ? 'orange' : 'green'}}">
+            {{item.matchTag}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 题干 (高亮匹配字) -->
+      <view class="q-stem">
+        <block wx:for="{{item.qSegments}}" wx:for-item="seg" wx:key="index">
+          <text class="{{seg.highlight ? 'hl-text' : ''}}">{{seg.text}}</text>
+        </block>
+      </view>
+
+      <!-- 选项 -->
+      <view class="opt-list">
+        <view
+          wx:for="{{item.opts}}"
+          wx:for-item="opt"
+          wx:for-index="optIdx"
+          wx:key="letter"
+          class="opt {{item.showAnswer && opt.isCorrect ? 'correct' : ''}} {{item.optHitIdx === optIdx ? 'opt-hit' : ''}}"
+        >
+          <text class="opt-label">{{opt.letter}}.</text>
+          <text class="opt-text">{{opt.text}}</text>
+          <text class="opt-mark" wx:if="{{item.showAnswer && opt.isCorrect}}">✓ 正确答案</text>
+        </view>
+      </view>
+
+      <!-- 底部答案与操作条 -->
+      <view class="card-footer">
+        <view class="ans-badge" bindtap="toggleItemAnswer" data-idx="{{index}}">
+          <text class="ans-label">参考答案：</text>
+          <text class="ans-value" wx:if="{{item.showAnswer}}">{{item.answerLetter}}（{{item.answerText}}）</text>
+          <text class="ans-hide" wx:else>点击查看答案</text>
+        </view>
+        <view class="action-btns">
+          <view class="act-btn" bindtap="toggleFav" data-idx="{{index}}">
+            <text class="act-icon">{{item.isFav ? '★' : '☆'}}</text>
+            <text class="act-text">{{item.isFav ? '已收藏' : '收藏'}}</text>
+          </view>
+          <view class="act-btn" bindtap="copyQuestion" data-idx="{{index}}">
+            <text class="act-icon">📋</text>
+            <text class="act-text">复制</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-box" wx:if="{{searched && results.length === 0}}">
+      <view class="empty-icon">🔎</view>
+      <view class="empty-title">未找到相关试题</view>
+      <view class="empty-desc">建议缩短关键词，或尝试拼音首字母（如 "wl"、"dzsw"）、跨字词</view>
+    </view>
+  </view>
+</view>

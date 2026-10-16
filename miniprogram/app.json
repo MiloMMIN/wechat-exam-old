@@ -13,7 +13,8 @@
     "pages/mine/index",
     "pages/import/index",
     "pages/bank-detail/index",
-    "pages/receive/index"
+    "pages/receive/index",
+    "pages/search/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

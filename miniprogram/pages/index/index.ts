@@ -58,6 +58,7 @@ Page({
   goChapter() { wx.navigateTo({ url: '../learn/index?mode=chapter' }) },
   goExam() { wx.navigateTo({ url: '../exam-settings/index' }) },
   goMistake() { wx.navigateTo({ url: '../mistake/index' }) },
+  goSearch() { wx.navigateTo({ url: '../search/index' }) },
   goFavorite() { wx.navigateTo({ url: '../favorite/index' }) },
   goCull() { wx.navigateTo({ url: '../cull/index' }) },
   goNotes() { wx.navigateTo({ url: '../notes/index' }) },

@@ -53,6 +53,7 @@
 .g-orange { background: linear-gradient(135deg, #ffe8cc, #ffd8a8); }
 .g-cyan { background: linear-gradient(135deg, #c5f6fa, #99e9f2); }
 .g-purple { background: linear-gradient(135deg, #e5dbff, #d0bfff); }
+.g-pink { background: linear-gradient(135deg, #fcc2d7, #eebefa); }
 .g-title { font-size: 34rpx; font-weight: 700; color: #222; }
 .g-sub { font-size: 24rpx; color: rgba(0,0,0,.55); margin-top: 8rpx; }
 

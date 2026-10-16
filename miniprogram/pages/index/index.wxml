@@ -53,6 +53,10 @@
       <view class="g-title">章节练习</view>
       <view class="g-sub">按题号分段</view>
     </view>
+    <view class="g-card g-pink" bindtap="goSearch">
+      <view class="g-title">搜题</view>
+      <view class="g-sub">拼音/跨字检索</view>
+    </view>
   </view>
 
   <!-- 功能 -->
